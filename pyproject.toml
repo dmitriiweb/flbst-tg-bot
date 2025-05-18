@@ -1,0 +1,17 @@
+[project]
+name = "flibusta-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiogram>=3.20.0.post0",
+    "httpx>=0.28.1",
+    "lxml>=5.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.15.0",
+    "ruff>=0.11.10",
+]
