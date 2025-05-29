@@ -1,3 +1,15 @@
 import os
 
-FLIBUSTA_BASE_URL = os.getenv("BASE_URL", "https://flibusta.is")
+from dotenv import load_dotenv
+
+load_dotenv()
+
+LIBRARY_BASE_URL = os.getenv("BASE_URL", "https://flibusta.is")
+TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+
+TG_BOT_WEBHOOK_BASE_URL = os.getenv("TG_BOT_WEBHOOK_BASE_URL")
+TG_BOT_WEBHOOK_PATH = os.getenv("TG_BOT_WEBHOOK_PATH", "/webhook")
+TG_BOT_WEBHOOK_SECRET = os.getenv("TG_BOT_WEBHOOK_SECRET", None)
+
+WEB_SERVER_HOST = os.environ.get("WEB_SERVER_HOST", "0.0.0.0")
+WEB_SERVER_PORT = int(os.environ.get("WEB_SERVER_PORT", 8000))
