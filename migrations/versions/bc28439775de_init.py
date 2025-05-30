@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 163450815302
+Revision ID: bc28439775de
 Revises: 
-Create Date: 2025-05-30 12:35:42.137015
+Create Date: 2025-05-30 19:27:17.785860
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '163450815302'
+revision: str = 'bc28439775de'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,9 +32,10 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('user_id')
     )
     op.create_table('downloaded_books',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -43,7 +44,7 @@ def upgrade() -> None:
     sa.Column('book_id', sa.Integer(), nullable=False),
     sa.Column('format', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['book_id'], ['books.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
