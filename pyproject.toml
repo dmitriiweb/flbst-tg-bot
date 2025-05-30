@@ -6,10 +6,14 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "aiogram>=3.20.0.post0",
+    "alembic>=1.16.1",
+    "asyncpg>=0.30.0",
     "httpx>=0.28.1",
     "loguru>=0.7.3",
     "lxml>=5.4.0",
+    "psycopg2-binary>=2.9.10",
     "python-dotenv>=1.1.0",
+    "sqlalchemy>=2.0.41",
 ]
 
 [project.optional-dependencies]

@@ -13,3 +13,9 @@ TG_BOT_WEBHOOK_SECRET = os.getenv("TG_BOT_WEBHOOK_SECRET", None)
 
 WEB_SERVER_HOST = os.environ.get("WEB_SERVER_HOST", "0.0.0.0")
 WEB_SERVER_PORT = int(os.environ.get("WEB_SERVER_PORT", 8000))
+
+POSTGRES_DB = os.getenv("POSTGRES_DB", "flibusta_bot")  
+POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres") 
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
