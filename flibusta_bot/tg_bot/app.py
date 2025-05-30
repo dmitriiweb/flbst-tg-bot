@@ -7,6 +7,7 @@ from loguru import logger
 from .. import config
 from .handlers import register_handlers
 
+
 class App:
     def __init__(self):
         assert config.TG_BOT_TOKEN, "TG_BOT_TOKEN is not set"

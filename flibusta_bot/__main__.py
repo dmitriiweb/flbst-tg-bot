@@ -1,4 +1,5 @@
-from .tg_bot import App 
+from .tg_bot import App
+
 """
 # from flibusta_bot.flibusta_parser.app import App as ParserApp
 

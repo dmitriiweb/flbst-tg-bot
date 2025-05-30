@@ -1,0 +1,47 @@
+services:
+  flibusta-tg-bot:
+    container_name: flibusta-tg-bot
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./flibusta_bot:/app/flibusta_bot
+      - ./migrations:/app/migrations
+      - ./alembic.ini:/app/alembic.ini
+    ports:
+      - "9998:9998"
+    depends_on:
+      flibusta-tg-bot-db:
+        condition: service_healthy
+    sysctls:
+      net.core.somaxconn: 65536
+    networks:
+      - flibusta-tg-bot-network
+
+  flibusta-tg-bot-db:
+    container_name: flibusta-tg-bot-db
+    image: postgres:17
+    restart: always
+    volumes:
+      - volume-db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 5s
+      timeout: 2s
+      retries: 3
+    sysctls:
+      net.core.somaxconn: 65536
+    networks:
+      - flibusta-tg-bot-network
+
+volumes:
+  volume-db:
+
+networks:
+  flibusta-tg-bot-network:
+    driver: bridge
