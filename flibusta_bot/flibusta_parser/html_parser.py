@@ -42,7 +42,7 @@ def _parse_books_listing_data(tree: lh.HtmlElement) -> list[schemas.BookListingD
     title_element = tree.xpath('//h3[contains(text(), "Найденные книги")]')[0]
     books_list = title_element.xpath("./following-sibling::ul[1]")[0].xpath("./li")
     parsed_books = []
-    base_url = config.FLIBUSTA_BASE_URL.rsplit("/")[0]
+    base_url = config.LIBRARY_BASE_URL.rsplit("/")[0]
     for i in books_list:
         book_data = i.xpath("./a[1]")[0]
         book_link = book_data.get("href")
@@ -90,6 +90,6 @@ def _get_download_links(tree: lh.HtmlElement) -> list[schemas.BookDownloadLinks]
             continue
         if not link:
             continue
-        url = f"{config.FLIBUSTA_BASE_URL}{link}"
+        url = f"{config.LIBRARY_BASE_URL}{link}"
         download_links.append(schemas.BookDownloadLinks(url=url, format=i))
     return download_links
