@@ -28,13 +28,15 @@ def get_all_pages_in_listing(html: str, first_url: str) -> list[str]:
     return pages
 
 
-def parse_listing(html: str) -> list[schemas.BookListingData] | None:
+def parse_listing(html: str) -> list[schemas.BookListingData]:
     tree = lh.fromstring(html)
     try:
         books = _parse_books_listing_data(tree)
+    except IndexError:
+        return []
     except Exception as e:
         logger.error(f"Error while parsing books listing data: {e}")
-        return None
+        return []
     return books
 
 

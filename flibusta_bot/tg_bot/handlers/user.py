@@ -1,12 +1,23 @@
 from aiogram import F, Router
-from aiogram.filters.command import Command
-from aiogram.types import Message
 from aiogram.enums import ChatType
+from aiogram.filters import Command, StateFilter
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import (
+    CallbackQuery,
+    Message,
+)
+from loguru import logger
 
 from flibusta_bot.db import db_session, storage
+from flibusta_bot.flibusta_parser import App as FlibustaParser
 
 router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
+
+
+class SearchBooksStates(StatesGroup):
+    info_book = State()
 
 
 @router.message(Command("start"))
@@ -21,6 +32,27 @@ async def cmd_start(message):
     )
 
 
-@router.message(F.text)
-async def search_books(message: Message):
-    pass
+@router.message(SearchBooksStates.info_book, F.text.startswith("/b"))
+async def book_info(message: Message, state: FSMContext):
+    book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
+    logger.debug(f"{book_id=}")
+
+
+@router.message(StateFilter("*"), F.text)
+async def search_books(message: Message, state: FSMContext):
+    async with FlibustaParser() as parser:
+        poges, books = await parser.search_book(message.text)
+
+    if not books:
+        answer = "К сожалению, не удалось найти ни одной книги."
+        await message.answer(answer)
+        return
+
+    books = books[:10]
+    total_books = len(books)
+    answer = f"Найдено {total_books} книг:\n\n"
+    books_list = [str(i) for i in books]
+    books_text = "\n\n".join(books_list)
+    answer += books_text
+    await message.answer(answer)
+    await state.set_state(SearchBooksStates.info_book)

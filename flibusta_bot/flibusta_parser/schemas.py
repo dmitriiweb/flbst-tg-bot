@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Literal
 
+from flibusta_bot import config
+
 
 @dataclass
 class Serializable:
@@ -40,6 +42,12 @@ class BookListingData(Serializable):
     @property
     def book_id(self) -> str:
         return self.book_url.split("/")[-1]
+
+    def __str__(self) -> str:
+        return (
+            f"{self.title} - {self.author}\n "
+            f"Скачать книгу: /b{self.book_id}@{config.TG_BOT_NAME}"
+        )
 
 
 @dataclass

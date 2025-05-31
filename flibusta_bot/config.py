@@ -6,6 +6,7 @@ load_dotenv()
 
 LIBRARY_BASE_URL = os.getenv("BASE_URL", "https://flibusta.is")
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+TG_BOT_NAME = os.getenv("TG_BOT_NAME")
 
 TG_BOT_WEBHOOK_BASE_URL = os.getenv("TG_BOT_WEBHOOK_BASE_URL")
 TG_BOT_WEBHOOK_PATH = os.getenv("TG_BOT_WEBHOOK_PATH", "/webhook")
