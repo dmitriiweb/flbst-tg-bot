@@ -23,6 +23,8 @@ class Book(BaseModel):
     author: str | None = None
     author_url: str | None = None
     description: str | None = None
+    download_urls: list[dict[str, str]] | None = None
+    hashtags: list[str] | None = None
 
     model_config = {"extra": "ignore", "from_attributes": True}
 

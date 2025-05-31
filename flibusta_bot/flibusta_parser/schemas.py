@@ -51,14 +51,21 @@ class BookListingData(Serializable):
 
 
 @dataclass
-class BookInfoData(BookListingData):
+class BookInfoData(Serializable):
+    id: int
+    title: str
     description: str
+    author: str
+    author_url: str
+    book_url: str
     download_urls: list[BookDownloadLinks]
+    hashtags: list[str] | None 
 
     def to_dict(self) -> dict:
         data = super().to_dict()
         data["download_urls"] = [link.to_dict() for link in self.download_urls]
         return data
+
 
 
 BookFormat = Literal["epub", "fb2", "mobi"]

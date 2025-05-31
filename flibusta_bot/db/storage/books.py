@@ -28,15 +28,3 @@ async def register_downloaded_book(
     session.add(downloaded_book)
     await session.commit()
     await session.refresh(downloaded_book)
-
-
-async def update_book_description(
-    session: AsyncSession, library_id: str, description: str
-) -> None:
-    stmt = (
-        sa.update(models.Book)
-        .where(models.Book.id == library_id)
-        .values(description=description)
-    )
-    await session.execute(stmt)
-    await session.commit()
