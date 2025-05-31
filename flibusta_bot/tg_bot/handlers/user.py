@@ -16,8 +16,6 @@ router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
 
 
-class SearchBooksStates(StatesGroup):
-    info_book = State()
 
 
 @router.message(Command("start"))
@@ -32,14 +30,15 @@ async def cmd_start(message):
     )
 
 
-@router.message(SearchBooksStates.info_book, F.text.startswith("/b"))
-async def book_info(message: Message, state: FSMContext):
+@router.message(F.text.startswith("/b"))
+async def book_info(message: Message):
     book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
-    logger.debug(f"{book_id=}")
+    async with FlibustaParser() as parser:
+        book_info = await parser.get_book_info(book_id, message.text)
 
 
-@router.message(StateFilter("*"), F.text)
-async def search_books(message: Message, state: FSMContext):
+@router.message(F.text)
+async def search_books(message: Message):
     async with FlibustaParser() as parser:
         poges, books = await parser.search_book(message.text)
 
@@ -55,4 +54,3 @@ async def search_books(message: Message, state: FSMContext):
     books_text = "\n\n".join(books_list)
     answer += books_text
     await message.answer(answer)
-    await state.set_state(SearchBooksStates.info_book)

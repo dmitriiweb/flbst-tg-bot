@@ -27,7 +27,6 @@ class Book(Base):
     __tablename__ = "books"
 
     id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
-    library_id: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     title: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     book_url: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     author: Mapped[str | None] = mapped_column(sa.String, nullable=True)

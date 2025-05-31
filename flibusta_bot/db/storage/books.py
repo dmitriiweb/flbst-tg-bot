@@ -11,7 +11,7 @@ async def get_book_by_id(session: AsyncSession, book_id: int) -> schemas.Book | 
     return schemas.Book.model_validate(book_record) if book_record else None
 
 
-async def create_book(session: AsyncSession, book: schemas.NewBook) -> schemas.Book:
+async def create_book(session: AsyncSession, book: schemas.Book) -> schemas.Book:
     new_book = models.Book(**book.model_dump(exclude_unset=True))
     session.add(new_book)
     await session.commit()
@@ -28,3 +28,15 @@ async def register_downloaded_book(
     session.add(downloaded_book)
     await session.commit()
     await session.refresh(downloaded_book)
+
+
+async def update_book_description(
+    session: AsyncSession, library_id: str, description: str
+) -> None:
+    stmt = (
+        sa.update(models.Book)
+        .where(models.Book.id == library_id)
+        .values(description=description)
+    )
+    await session.execute(stmt)
+    await session.commit()
