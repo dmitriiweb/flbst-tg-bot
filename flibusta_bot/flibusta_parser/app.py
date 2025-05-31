@@ -41,11 +41,11 @@ class App:
         return books if books else []
 
     async def get_book_info(
-        self, book_info: schemas.BookListingData, previous_url: str | None = None
+        self, book_id: str | int, previous_url: str | None = None
     ) -> schemas.BookInfoData | None:
         previous_url = previous_url or self.http_client.base_url
-        response = await self.http_client.get_book_info(book_info.book_id, previous_url)
+        response = await self.http_client.get_book_info(str(book_id), previous_url)
         if not response:
             return None
-        book_data = html_parser.parse_book_info(response.content, book_info)
+        book_data = html_parser.parse_book_info(response.content, book_id)
         return book_data

@@ -35,6 +35,14 @@ async def book_info(message: Message):
     book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
     async with FlibustaParser() as parser:
         book_info = await parser.get_book_info(book_id, message.text)
+        if book_info is None:
+            await message.answer(
+                "К сожалению, не удалось найти информацию о книге с таким ID."
+            )
+            return
+        logger.debug(f"{book_info=}")
+    await message.answer(str(book_info.to_dict()))
+
 
 
 @router.message(F.text)
