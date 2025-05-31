@@ -59,13 +59,25 @@ class BookInfoData(Serializable):
     author_url: str
     book_url: str
     download_urls: list[BookDownloadLinks]
-    hashtags: list[str] | None 
+    hashtags: list[str] | None
 
     def to_dict(self) -> dict:
         data = super().to_dict()
         data["download_urls"] = [link.to_dict() for link in self.download_urls]
         return data
 
+    def to_telegram_message(self) -> str:
+        hashtags = (
+            " ".join(f"#{tag.upper().replace(' ', '')}" for tag in self.hashtags)
+            if self.hashtags
+            else ""
+        )
+        return (
+            f"<b>{self.title}</b>\n\n"
+            f"<i>Автор:</i> {self.author}\n\n"
+            f"{hashtags}\nn"
+            f"{self.description}"
+        )[:4096 ]
 
 
 BookFormat = Literal["epub", "fb2", "mobi"]

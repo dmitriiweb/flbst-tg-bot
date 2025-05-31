@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from aiogram.enums import ChatType
+from aiogram.enums import ChatType, ParseMode
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -11,11 +11,10 @@ from loguru import logger
 
 from flibusta_bot.db import db_session, storage
 from flibusta_bot.flibusta_parser import App as FlibustaParser
+from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
 
 router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
-
-
 
 
 @router.message(Command("start"))
@@ -41,8 +40,13 @@ async def book_info(message: Message):
             )
             return
         logger.debug(f"{book_info=}")
-    await message.answer(str(book_info.to_dict()))
-
+    download_urls = [i.url for i in book_info.download_urls]
+    reply_markup = choose_download_format_keyboard(download_urls=download_urls)
+    await message.answer(
+        book_info.to_telegram_message(),
+        parse_mode=ParseMode.HTML,
+        reply_markup=reply_markup,
+    )
 
 
 @router.message(F.text)

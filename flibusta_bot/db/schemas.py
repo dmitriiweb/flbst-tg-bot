@@ -27,5 +27,3 @@ class Book(BaseModel):
     hashtags: list[str] | None = None
 
     model_config = {"extra": "ignore", "from_attributes": True}
-
-

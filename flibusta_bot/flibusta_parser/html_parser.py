@@ -83,7 +83,7 @@ def parse_book_info(html: str, book_id: str | int) -> schemas.BookInfoData:
     author = ""
     author_url = ""
     book_url = f"{config.LIBRARY_BASE_URL}/b/{book_id}"
-    
+
     try:
         title = tree.xpath('//h1[@class="title"]/text()')[0].strip()
         # Remove "(fb2)" or similar suffix if present
@@ -91,7 +91,7 @@ def parse_book_info(html: str, book_id: str | int) -> schemas.BookInfoData:
             title = title.split(" (")[0].strip()
     except Exception:
         pass
-        
+
     try:
         author_element = tree.xpath('//h1[@class="title"]/following-sibling::a[1]')[0]
         author = author_element.text_content().strip()

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import sqlalchemy as sa
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
 
@@ -36,9 +36,7 @@ class Book(Base):
     downlad_urls: Mapped[list[dict[str, str]] | None] = mapped_column(
         JSONB, nullable=True
     )
-    hashtags: Mapped[list[str] | None] = mapped_column(
-        JSONB, nullable=True
-    )
+    hashtags: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True)
 
     downloaded_books: Mapped[list[DownloadedBook]] = relationship(
         "DownloadedBook", back_populates="book"
