@@ -12,7 +12,7 @@ services:
       - ./migrations:/app/migrations
       - ./alembic.ini:/app/alembic.ini
     ports:
-      - "9998:9998"
+      - "9998:8000"
     depends_on:
       flibusta-tg-bot-db:
         condition: service_healthy
