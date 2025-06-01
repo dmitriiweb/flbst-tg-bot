@@ -12,6 +12,9 @@ async def get_book_by_id(session: AsyncSession, book_id: int) -> schemas.Book | 
 
 
 async def create_book(session: AsyncSession, book: schemas.Book) -> schemas.Book:
+    existing = await get_book_by_id(session, book.id)
+    if existing:
+        return existing
     new_book = models.Book(**book.model_dump(exclude_unset=True))
     session.add(new_book)
     await session.commit()

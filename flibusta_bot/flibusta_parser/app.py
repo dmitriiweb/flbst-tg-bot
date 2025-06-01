@@ -1,12 +1,12 @@
 from __future__ import annotations
-from loguru import logger
 
-from typing import Literal
+import re
 
 from . import html_parser, schemas
 from .http_client import HttpClient
 
 UrlPages = list[str]
+attacment_re = re.compile(r'filename="?([^";]+)"?')
 
 
 class App:
@@ -68,7 +68,6 @@ class App:
 
     async def get_filename_from_metadata(self, url: str) -> str | None:
         metadata = await self.http_client.get_file_metadata(url)
-        logger.debug(f"{metadata=}")
         if not metadata:
             return None
         headers = metadata.get("headers", {})
@@ -76,10 +75,8 @@ class App:
         if not content_disposition:
             return None
         # Example: 'attachment; filename="example.fb2"'
-        import re
 
-        match = re.search(r'filename="?([^";]+)"?', content_disposition)
+        match = attacment_re.search(content_disposition)
         if match:
             return match.group(1)
         return None
-
