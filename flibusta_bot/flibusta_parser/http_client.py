@@ -111,7 +111,6 @@ class HttpClient:
             logger.error(f"Error while downloading book: {e} | {url=}")
             return None
 
-
     async def get_file_metadata(self, url: str) -> dict[str, Any] | None:
         try:
             response = await self.client.head(url, headers=self.default_headers)
