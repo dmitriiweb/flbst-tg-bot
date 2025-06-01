@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 from dataclasses import asdict, dataclass
 from typing import Literal
 
@@ -27,7 +28,7 @@ class HttpResponse(Serializable):
 @dataclass
 class BinaryHttpResponse:
     status_code: int
-    content: bytes
+    content: io.BytesIO
     headers: dict
     url: str
 
@@ -68,16 +69,16 @@ class BookInfoData(Serializable):
 
     def to_telegram_message(self) -> str:
         hashtags = (
-            " ".join(f"#{tag.upper().replace(' ', '')}" for tag in self.hashtags)
+            " ".join(f"#{tag.title().replace(' ', '')}" for tag in self.hashtags)
             if self.hashtags
             else ""
         )
         return (
             f"<b>{self.title}</b>\n\n"
             f"<i>Автор:</i> {self.author}\n\n"
-            f"{hashtags}\nn"
+            f"{hashtags}\n\n"
             f"{self.description}"
-        )[:4096 ]
+        )[:4096]
 
 
 BookFormat = Literal["epub", "fb2", "mobi"]

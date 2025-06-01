@@ -1,3 +1,4 @@
+import io
 from typing import Any, Literal
 
 import httpx
@@ -71,26 +72,24 @@ class HttpClient:
         return await self._make_request(path, headers=headers)
 
     async def download_book(
-        self, book_id: str, format: Literal["epub", "fb2", "mobi"]
+        self, download_url: str
     ) -> schemas.BinaryHttpResponse | None:
-        download_url = await self._get_download_book_url(book_id, format)
-        if not download_url:
-            return None
         book = await self._download_book(download_url)
         return book
 
-    async def _get_download_book_url(
+    async def get_download_book_url(
         self, book_id: str, format: Literal["epub", "fb2", "mobi"]
     ) -> str | None:
         path = f"b/{book_id}/{format}"
+        url = f"{self.base_url}{path}"
         headers = self.default_headers.copy()
         headers["referer"] = f"{self.base_url}b/{book_id}"
         try:
             response = await self.client.get(
-                path, headers=headers, follow_redirects=True
+                url, headers=headers, follow_redirects=True
             )
         except Exception as e:
-            logger.error(f"Error while getting download URL: {e} | {path=}")
+            logger.error(f"Error while getting download URL: {e} | {url=}")
             return None
         return str(response.url)
 
@@ -104,10 +103,28 @@ class HttpClient:
                 return None
             return schemas.BinaryHttpResponse(
                 status_code=response.status_code,
-                content=response.content,
+                content=io.BytesIO(response.content),
                 headers=dict(response.headers),
                 url=url,
             )
         except Exception as e:
             logger.error(f"Error while downloading book: {e} | {url=}")
+            return None
+
+
+    async def get_file_metadata(self, url: str) -> dict[str, Any] | None:
+        try:
+            response = await self.client.head(url, headers=self.default_headers)
+            if response.status_code != 200:
+                logger.error(
+                    f"Error while getting file metadata: {response.status_code} | {url=}"
+                )
+                return None
+            return {
+                "status_code": response.status_code,
+                "headers": dict(response.headers),
+                "url": url,
+            }
+        except Exception as e:
+            logger.error(f"Error while getting file metadata: {e} | {url=}")
             return None

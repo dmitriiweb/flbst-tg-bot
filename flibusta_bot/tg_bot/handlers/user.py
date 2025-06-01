@@ -1,14 +1,14 @@
 from aiogram import F, Router
-from aiogram.enums import ChatType, ParseMode
-from aiogram.filters import Command, StateFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
+from aiogram.enums import ChatAction, ChatType, ParseMode
+from aiogram.filters import Command
 from aiogram.types import (
     CallbackQuery,
     Message,
+    URLInputFile,
 )
 from loguru import logger
 
+from flibusta_bot import config
 from flibusta_bot.db import db_session, storage
 from flibusta_bot.flibusta_parser import App as FlibustaParser
 from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
@@ -29,8 +29,11 @@ async def cmd_start(message):
     )
 
 
-@router.message(F.text.startswith("/b"))
+@router.message(F.text.startswith("/b"), F.text.endswith(config.TG_BOT_NAME))
 async def book_info(message: Message):
+    await message.bot.send_chat_action(
+        chat_id=message.chat.id, action=ChatAction.TYPING
+    )
     book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
     async with FlibustaParser() as parser:
         book_info = await parser.get_book_info(book_id, message.text)
@@ -39,7 +42,6 @@ async def book_info(message: Message):
                 "К сожалению, не удалось найти информацию о книге с таким ID."
             )
             return
-        logger.debug(f"{book_info=}")
     download_urls = [i.url for i in book_info.download_urls]
     reply_markup = choose_download_format_keyboard(download_urls=download_urls)
     await message.answer(
@@ -49,8 +51,32 @@ async def book_info(message: Message):
     )
 
 
+# @router.callback_query(F.data.startswith("downloadurl:"))
+@router.callback_query()
+async def download_book(callback: CallbackQuery):
+    doc_url = callback.data.split("downloadurl:")[-1]
+    doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
+    async with FlibustaParser() as parser:
+        download_url = await parser.get_download_url(doc_url)
+        logger.debug(f"{download_url=}")
+        if download_url is None:
+            await callback.answer(
+                "К сожалению, не удалось получить ссылку для скачивания книги."
+            )
+            return
+        filename = await parser.get_filename_from_metadata(download_url)
+    logger.debug(f"{download_url=}")
+    logger.debug(f"{filename=}")
+    doc = URLInputFile(url=download_url, filename=filename)
+    await callback.bot.send_document(chat_id=callback.message.chat.id, document=doc)
+    await callback.answer()
+
+
 @router.message(F.text)
 async def search_books(message: Message):
+    await message.bot.send_chat_action(
+        chat_id=message.chat.id, action=ChatAction.TYPING
+    )
     async with FlibustaParser() as parser:
         poges, books = await parser.search_book(message.text)
 
