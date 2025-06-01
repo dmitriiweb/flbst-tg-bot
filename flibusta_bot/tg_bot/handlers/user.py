@@ -56,20 +56,19 @@ async def book_info(message: Message):
 async def download_book(callback: CallbackQuery):
     doc_url = callback.data.split("downloadurl:")[-1]
     doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
+    await callback.answer("Загрузка началась...")
     async with FlibustaParser() as parser:
         download_url = await parser.get_download_url(doc_url)
-        logger.debug(f"{download_url=}")
         if download_url is None:
-            await callback.answer(
-                "К сожалению, не удалось получить ссылку для скачивания книги."
-            )
+            if callback.message is not None:
+                await callback.message.answer(
+                    "К сожалению, не удалось получить ссылку для скачивания книги."
+                )
             return
         filename = await parser.get_filename_from_metadata(download_url)
-    logger.debug(f"{download_url=}")
-    logger.debug(f"{filename=}")
     doc = URLInputFile(url=download_url, filename=filename)
-    await callback.bot.send_document(chat_id=callback.message.chat.id, document=doc)
-    await callback.answer()
+    if callback.message is not None:
+        await callback.message.answer_document(document=doc)
 
 
 @router.message(F.text)
@@ -85,6 +84,7 @@ async def search_books(message: Message):
         await message.answer(answer)
         return
 
+    # TODO: add pagination for one library page (50 books) - 10 books per telegram page
     books = books[:10]
     total_books = len(books)
     answer = f"Найдено {total_books} книг:\n\n"
