@@ -1,4 +1,6 @@
 from aiogram import F, Router
+from flibusta_bot.db.schemas import Book as BookSchema
+from flibusta_bot.db.storage.books import create_book
 from aiogram.enums import ChatAction, ChatType, ParseMode
 from aiogram.filters import Command
 from aiogram.types import (
@@ -31,9 +33,10 @@ async def cmd_start(message):
 
 @router.message(F.text.startswith("/b"), F.text.endswith(config.TG_BOT_NAME))
 async def book_info(message: Message):
-    await message.bot.send_chat_action(
-        chat_id=message.chat.id, action=ChatAction.TYPING
-    )
+    if message.bot is not None:
+        await message.bot.send_chat_action(
+            chat_id=message.chat.id, action=ChatAction.TYPING
+        )
     book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
     async with FlibustaParser() as parser:
         book_info = await parser.get_book_info(book_id, message.text)
@@ -42,6 +45,21 @@ async def book_info(message: Message):
                 "К сожалению, не удалось найти информацию о книге с таким ID."
             )
             return
+    # Save book info to DB
+    async with db_session() as session:
+        book_schema = BookSchema(
+            id=book_info.id,
+            title=book_info.title,
+            description=book_info.description,
+            author=book_info.author,
+            author_url=book_info.author_url,
+            book_url=book_info.book_url,
+            hashtags=book_info.hashtags,
+        )
+        try:
+            await create_book(session, book_schema)
+        except Exception as e:
+            logger.warning(f"Could not save book to DB: {e}")
     download_urls = [i.url for i in book_info.download_urls]
     reply_markup = choose_download_format_keyboard(download_urls=download_urls)
     await message.answer(
@@ -73,9 +91,13 @@ async def download_book(callback: CallbackQuery):
 
 @router.message(F.text)
 async def search_books(message: Message):
-    await message.bot.send_chat_action(
-        chat_id=message.chat.id, action=ChatAction.TYPING
-    )
+    if message.bot is not None:
+        await message.bot.send_chat_action(
+            chat_id=message.chat.id, action=ChatAction.TYPING
+        )
+    if not message.text:
+        await message.answer("Пустой запрос.")
+        return
     async with FlibustaParser() as parser:
         poges, books = await parser.search_book(message.text)
 
