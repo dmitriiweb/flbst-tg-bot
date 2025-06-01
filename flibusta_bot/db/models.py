@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -27,12 +28,15 @@ class Book(Base):
     __tablename__ = "books"
 
     id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
-    library_id: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     title: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     book_url: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     author: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     author_url: Mapped[str | None] = mapped_column(sa.String, nullable=True)
     description: Mapped[str | None] = mapped_column(sa.Text, nullable=True)
+    downlad_urls: Mapped[list[dict[str, str]] | None] = mapped_column(
+        JSONB, nullable=True
+    )
+    hashtags: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True)
 
     downloaded_books: Mapped[list[DownloadedBook]] = relationship(
         "DownloadedBook", back_populates="book"

@@ -28,13 +28,15 @@ def get_all_pages_in_listing(html: str, first_url: str) -> list[str]:
     return pages
 
 
-def parse_listing(html: str) -> list[schemas.BookListingData] | None:
+def parse_listing(html: str) -> list[schemas.BookListingData]:
     tree = lh.fromstring(html)
     try:
         books = _parse_books_listing_data(tree)
+    except IndexError:
+        return []
     except Exception as e:
         logger.error(f"Error while parsing books listing data: {e}")
-        return None
+        return []
     return books
 
 
@@ -60,23 +62,74 @@ def _parse_books_listing_data(tree: lh.HtmlElement) -> list[schemas.BookListingD
     return parsed_books
 
 
-def parse_book_info(
-    html: str, book_data: schemas.BookListingData
-) -> schemas.BookInfoData:
+def parse_book_info(html: str, book_id: str | int) -> schemas.BookInfoData:
     tree: lh.HtmlElement = lh.fromstring(html)
+
+    # Use provided book_id or try to extract it
+    try:
+        book_id = int(book_id)
+    except (TypeError, ValueError):
+        try:
+            # Try to get ID from script tag
+            script_text = tree.xpath('//script[contains(text(), "var bookId")]')[
+                0
+            ].text_content()
+            book_id = int(script_text.split("=")[1].strip())
+        except Exception:
+            book_id = 0
+
+    # Extract title and author
+    title = ""
+    author = ""
+    author_url = ""
+    book_url = f"{config.LIBRARY_BASE_URL}/b/{book_id}"
+
+    try:
+        title = tree.xpath('//h1[@class="title"]/text()')[0].strip()
+        # Remove "(fb2)" or similar suffix if present
+        if " (" in title:
+            title = title.split(" (")[0].strip()
+    except Exception:
+        pass
+
+    try:
+        author_element = tree.xpath('//h1[@class="title"]/following-sibling::a[1]')[0]
+        author = author_element.text_content().strip()
+        author_url = f"{config.LIBRARY_BASE_URL}{author_element.get('href')}"
+    except Exception:
+        pass
+
+    # Extract description
+    description = ""
     try:
         description_title = tree.xpath('//h2[contains(text(), "Аннотация")]')[0]
         description = description_title.xpath("./following-sibling::p[1]/text()")[0]
-    except Exception as _:
-        return schemas.BookInfoData(
-            **book_data.to_dict(), description="", download_urls=[]
-        )
-    description = description or ""
+    except Exception:
+        pass
+
+    # Extract hashtags/genres
+    hashtags = []
+    try:
+        genre_links = tree.xpath('//p[@class="genre"]/a')
+        for genre_link in genre_links:
+            genre_text = genre_link.text_content().strip()
+            hashtags.append(genre_text)
+    except Exception:
+        pass
+
+    # Get download links
     links_for_download = _get_download_links(tree)
+
+    # Create and return BookInfoData
     return schemas.BookInfoData(
-        **book_data.to_dict(),
-        description=description.strip(),
+        id=book_id,
+        title=title,
+        author=author,
+        author_url=author_url,
+        book_url=book_url,
+        description=description.strip() if description else "",
         download_urls=links_for_download,
+        hashtags=hashtags if hashtags else None,
     )
 
 

@@ -16,18 +16,14 @@ class User(NewUser):
     model_config = {"from_attributes": True}
 
 
-class NewBook(BaseModel):
-    library_id: str | None = None
+class Book(BaseModel):
+    id: int
     title: str | None = None
     book_url: str | None = None
     author: str | None = None
     author_url: str | None = None
     description: str | None = None
+    download_urls: list[dict[str, str]] | None = None
+    hashtags: list[str] | None = None
 
-    model_config = {"extra": "ignore"}
-
-
-class Book(NewBook):
-    id: int
-
-    model_config = {"from_attributes": True}
+    model_config = {"extra": "ignore", "from_attributes": True}
