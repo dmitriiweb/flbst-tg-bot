@@ -46,7 +46,7 @@ class BookListingData(Serializable):
 
     def __str__(self) -> str:
         return (
-            f"{self.title} - {self.author}\n "
+            f"{self.title} — {self.author}\n "
             f"Скачать книгу: /b{self.book_id}@{config.TG_BOT_NAME}"
         )
 
