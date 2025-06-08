@@ -15,6 +15,7 @@ from flibusta_bot.db import db_session, storage
 from flibusta_bot.db.schemas import Book as BookSchema
 from flibusta_bot.db.storage.books import create_book
 from flibusta_bot.flibusta_parser import App as FlibustaParser
+from flibusta_bot.flibusta_parser.schemas import BookInfoData
 from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
 
 router = Router()
@@ -42,28 +43,13 @@ async def book_info(message: Message):
             chat_id=message.chat.id, action=ChatAction.TYPING
         )
     book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
-    async with FlibustaParser() as parser:
-        book_info = await parser.get_book_info(book_id, message.text)
-        if book_info is None:
-            await message.answer(
-                "К сожалению, не удалось найти информацию о книге с таким ID."
-            )
-            return
-    # Save book info to DB
-    async with db_session() as session:
-        book_schema = BookSchema(
-            id=book_info.id,
-            title=book_info.title,
-            description=book_info.description,
-            author=book_info.author,
-            author_url=book_info.author_url,
-            book_url=book_info.book_url,
-            hashtags=book_info.hashtags,
+    book_info = await _get_book_info(int(book_id), message)
+    if book_info is None:
+        await message.answer(
+            "К сожалению, не удалось найти информацию о книге с таким ID."
         )
-        try:
-            await create_book(session, book_schema)
-        except Exception as e:
-            logger.warning(f"Could not save book to DB: {e}")
+        return
+
     download_urls = [i.url for i in book_info.download_urls]
     reply_markup = choose_download_format_keyboard(download_urls=download_urls)
     await message.answer(
@@ -73,8 +59,7 @@ async def book_info(message: Message):
     )
 
 
-# @router.callback_query(F.data.startswith("downloadurl:"))
-@router.callback_query()
+@router.callback_query(F.data.startswith("downloadurl:"))
 async def download_book(callback: CallbackQuery):
     if callback.message and callback.bot is not None:
         await callback.bot.send_chat_action(
@@ -139,3 +124,36 @@ async def search_books(message: Message):
     books_text = "\n\n".join(books_list)
     answer += books_text
     await message.answer(answer)
+
+
+async def _get_book_info(book_id: int, message: Message) -> BookInfoData | None:
+    is_new_book = False
+
+    async with db_session() as session:
+        book_info = await storage.books.get_book_info(session, book_id)
+
+    if book_info is None:
+        async with FlibustaParser() as parser:
+            book_info = await parser.get_book_info(book_id, message.text)
+            is_new_book = True
+
+    if book_info is None:
+        return None
+
+    if is_new_book:
+        async with db_session() as session:
+            book_schema = BookSchema(
+                id=book_info.id,
+                title=book_info.title,
+                description=book_info.description,
+                author=book_info.author,
+                author_url=book_info.author_url,
+                book_url=book_info.book_url,
+                hashtags=book_info.hashtags,
+            )
+            try:
+                await create_book(session, book_schema)
+            except Exception as e:
+                logger.warning(f"Could not save book to DB: {e}")
+
+    return book_info
