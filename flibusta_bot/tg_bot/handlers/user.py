@@ -26,10 +26,6 @@ book_id_pattern = re.compile(r"/b/(\d+)")
 
 @router.message(Command("start"))
 async def cmd_start(message):
-    async with db_session() as session:
-        _ = await storage.users.get_or_create_user(
-            session, message.from_user.id, message
-        )
     await message.answer(
         "Привет! Я бот для поиска книг в библиотеке. "
         "Отправь мне название книги и я помогу тебе найти её"
@@ -85,13 +81,12 @@ async def download_book(callback: CallbackQuery):
             # Extract book_id from doc_url (assuming .../b/<book_id>/...)
             match = book_id_pattern.search(doc_url)
             book_id = int(match.group(1)) if match else None
-            if book_id and callback.from_user:
+            if book_id:
                 async with db_session() as session:
                     from flibusta_bot.db.storage.books import register_downloaded_book
 
                     await register_downloaded_book(
                         session,
-                        user_id=callback.from_user.id,
                         book_id=book_id,
                         format=filename.split(".")[-1] if filename else None,
                     )
