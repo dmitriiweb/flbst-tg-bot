@@ -54,10 +54,10 @@ async def get_book_info(session: AsyncSession, book_id: int) -> BookInfoData | N
 
 
 async def register_downloaded_book(
-    session: AsyncSession, user_id: int, book_id: int, format: str | None = None
+    session: AsyncSession, book_id: int, format: str | None = None
 ) -> None:
     downloaded_book = models.DownloadedBook(
-        user_id=user_id, book_id=book_id, format=format
+        book_id=book_id, format=format
     )
     session.add(downloaded_book)
     await session.commit()

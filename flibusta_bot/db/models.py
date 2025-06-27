@@ -7,23 +7,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
 
 
-class User(Base):
-    __tablename__ = "users"
-
-    user_id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
-    username: Mapped[str | None] = mapped_column(sa.String, nullable=True)
-    created_at: Mapped[sa.DateTime] = mapped_column(
-        sa.DateTime, nullable=False, server_default=sa.func.now()
-    )
-
-    downloaded_books: Mapped[list[DownloadedBook]] = relationship(
-        "DownloadedBook", back_populates="user"
-    )
-
-    def __repr__(self):
-        return f"<User(user_id={self.user_id}, username={self.username})>"
-
-
 class Book(Base):
     __tablename__ = "books"
 
@@ -53,12 +36,10 @@ class DownloadedBook(Base):
     created_at: Mapped[sa.DateTime] = mapped_column(
         sa.DateTime, nullable=False, server_default=sa.func.now()
     )
-    user_id: Mapped[int] = mapped_column(sa.ForeignKey("users.user_id"))
     book_id: Mapped[int] = mapped_column(sa.ForeignKey("books.id"))
     format: Mapped[str | None] = mapped_column(sa.String, nullable=True)
 
-    user: Mapped[User] = relationship("User", back_populates="downloaded_books")
     book: Mapped[Book] = relationship("Book", back_populates="downloaded_books")
 
     def __repr__(self):
-        return f"<DownloadedBook(id={self.id}, user_id={self.user_id}, book_id={self.book_id}, format={self.format})>"
+        return f"<DownloadedBook(id={self.id}, book_id={self.book_id}, format={self.format})>"

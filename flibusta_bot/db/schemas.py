@@ -3,19 +3,6 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class NewUser(BaseModel):
-    user_id: int
-    username: str | None
-
-    model_config = {"extra": "ignore"}
-
-
-class User(NewUser):
-    created_at: datetime
-
-    model_config = {"from_attributes": True}
-
-
 class Book(BaseModel):
     id: int
     title: str | None = None
