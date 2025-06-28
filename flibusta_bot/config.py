@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-LIBRARY_BASE_URL = os.getenv("BASE_URL", "https://flibusta.is")
+LIBRARY_BASE_URL = (os.getenv("BASE_URL", "https://flibusta.club")).rstrip("/")
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
 TG_BOT_NAME = os.getenv("TG_BOT_NAME")
 
