@@ -15,7 +15,6 @@ class HttpClient:
         "accept-language": "en-US,en;q=0.9,ru;q=0.8",
         "dnt": "1",
         "priority": "u=0, i",
-        # 'referer': 'https://flibusta.is/booksearch?ask=%D0%B3%D0%B0%D1%80%D1%80%D0%B8+%D0%BF%D0%BE%D1%82%D1%82%D0%B5%D1%80+%D0%B8+%D1%84%D0%B8%D0%BB%D0%BE%D1%81%D0%BE%D1%84%D1%81%D0%BA%D0%B8%D0%B9',
         "sec-ch-ua": '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": '"Linux"',
