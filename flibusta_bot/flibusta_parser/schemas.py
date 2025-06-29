@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import io
 from dataclasses import asdict, dataclass
-from typing import Literal
 
 from flibusta_bot import config
 
@@ -52,6 +51,12 @@ class BookListingData(Serializable):
 
 
 @dataclass
+class BookDownloadLinks(Serializable):
+    url: str
+    format: str
+
+
+@dataclass
 class BookInfoData(Serializable):
     id: int
     title: str
@@ -79,9 +84,3 @@ class BookInfoData(Serializable):
             f"{hashtags}\n\n"
             f"{self.description}"
         )[:4096]
-
-
-@dataclass
-class BookDownloadLinks(Serializable):
-    url: str
-    format: str
