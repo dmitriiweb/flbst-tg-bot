@@ -135,14 +135,3 @@ def parse_book_info(html: str, book_id: str | int) -> schemas.BookInfoData:
 
 def _get_download_links(tree: lh.HtmlElement) -> list[schemas.BookDownloadLinks]:
     download_links = []
-    target_formats: list[schemas.BookFormat] = ["epub", "fb2", "mobi"]
-    for i in target_formats:
-        try:
-            link = tree.xpath(f'//a[contains(text(), "{i}")]/@href')[0]
-        except Exception as _:
-            continue
-        if not link:
-            continue
-        url = f"{config.LIBRARY_BASE_URL}{link}"
-        download_links.append(schemas.BookDownloadLinks(url=url, format=i))
-    return download_links
