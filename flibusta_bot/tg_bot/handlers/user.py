@@ -12,10 +12,8 @@ from loguru import logger
 
 from flibusta_bot import config
 from flibusta_bot.db import db_session, storage
-from flibusta_bot.db.schemas import Book as BookSchema
-from flibusta_bot.db.storage.books import create_book
 from flibusta_bot.flibusta_parser import App as FlibustaParser
-from flibusta_bot.flibusta_parser.schemas import BookInfoData
+from flibusta_bot.flibusta_parser import schemas
 from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
 
 router = Router()
@@ -83,12 +81,8 @@ async def download_book(callback: CallbackQuery):
             book_id = int(match.group(1)) if match else None
             if book_id:
                 async with db_session() as session:
-                    from flibusta_bot.db.storage.books import register_downloaded_book
-
-                    await register_downloaded_book(
-                        session,
-                        book_id=book_id,
-                        format=filename.split(".")[-1] if filename else None,
+                    await storage.books.register_downloaded_book(
+                        session, title=filename or "Unknown book", url=doc_url
                     )
         except Exception as e:
             logger.warning(f"Could not save download event to DB: {e}")
@@ -121,34 +115,7 @@ async def search_books(message: Message):
     await message.answer(answer)
 
 
-async def _get_book_info(book_id: int, message: Message) -> BookInfoData | None:
-    is_new_book = False
-
-    async with db_session() as session:
-        book_info = await storage.books.get_book_info(session, book_id)
-
-    if book_info is None:
-        async with FlibustaParser() as parser:
-            book_info = await parser.get_book_info(book_id, message.text)
-            is_new_book = True
-
-    if book_info is None:
-        return None
-
-    if is_new_book:
-        async with db_session() as session:
-            book_schema = BookSchema(
-                id=book_info.id,
-                title=book_info.title,
-                description=book_info.description,
-                author=book_info.author,
-                author_url=book_info.author_url,
-                book_url=book_info.book_url,
-                hashtags=book_info.hashtags,
-            )
-            try:
-                await create_book(session, book_schema)
-            except Exception as e:
-                logger.warning(f"Could not save book to DB: {e}")
-
+async def _get_book_info(book_id: int, message: Message) -> schemas.BookInfoData | None:
+    async with FlibustaParser() as parser:
+        book_info = await parser.get_book_info(book_id, message.text)
     return book_info
