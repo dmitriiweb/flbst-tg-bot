@@ -29,7 +29,7 @@ class HttpClient:
 
     def __init__(self, base_url: str | None = None):
         self.base_url = base_url or config.LIBRARY_BASE_URL.rstrip("/") + "/"
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(follow_redirects=True, timeout=600)
 
     async def __aenter__(self):
         return self
