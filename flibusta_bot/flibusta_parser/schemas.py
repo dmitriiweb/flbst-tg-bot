@@ -81,10 +81,7 @@ class BookInfoData(Serializable):
         )[:4096]
 
 
-BookFormat = Literal["epub", "fb2", "mobi"]
-
-
 @dataclass
 class BookDownloadLinks(Serializable):
     url: str
-    format: BookFormat
+    format: str
