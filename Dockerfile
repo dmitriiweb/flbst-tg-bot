@@ -15,9 +15,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-editable
 
 COPY flibusta_bot flibusta_bot/
-COPY migrations migrations/
-COPY alembic.ini alembic.ini
 COPY README.md README.md
+COPY logs logs/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-editable
@@ -25,4 +24,4 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 EXPOSE 9998
 
 # Run the application
-CMD uv run alembic upgrade head && uv run -m flibusta_bot
+CMD  uv run -m flibusta_bot
