@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import io
 from typing import Any, Literal
 
@@ -40,10 +41,11 @@ class HttpClient:
         self, path: str, headers: dict[str, Any]
     ) -> schemas.HttpResponse | None:
         url = f"{self.base_url}{path}"
+        logger.debug(f"{url=}")
         try:
             response = await self.client.get(url, headers=headers)
-        except Exception as e:
-            logger.error(f"Error while making request: {e} | {url=}")
+        except Exception:
+            logger.error(f"Error while making request: {url=}")
             return None
         if response.status_code != 200:
             logger.error(f"Error while making request: {response.status_code} | {url=}")

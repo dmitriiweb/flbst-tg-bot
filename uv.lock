@@ -173,6 +173,7 @@ dependencies = [
     { name = "httpx" },
     { name = "loguru" },
     { name = "lxml" },
+    { name = "pagination-aiogram3" },
     { name = "python-dotenv" },
 ]
 
@@ -191,6 +192,7 @@ requires-dist = [
     { name = "lxml", specifier = ">=5.4.0" },
     { name = "lxml-stubs", marker = "extra == 'dev'", specifier = ">=0.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.15.0" },
+    { name = "pagination-aiogram3", specifier = ">=0.1.1" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.10" },
 ]
@@ -524,6 +526,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a2/6e/371856a3fb9d31ca8dac321cda606860fa4548858c0cc45d9d1d4ca2628b/mypy_extensions-1.1.0.tar.gz", hash = "sha256:52e68efc3284861e772bbcd66823fde5ae21fd2fdb51c62a211403730b916558", size = 6343, upload-time = "2025-04-22T14:54:24.164Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/79/7b/2c79738432f5c924bef5071f933bcc9efd0473bac3b4aa584a6f7c1c8df8/mypy_extensions-1.1.0-py3-none-any.whl", hash = "sha256:1be4cccdb0f2482337c4743e60421de3a356cd97508abadd57d47403e94f5505", size = 4963, upload-time = "2025-04-22T14:54:22.983Z" },
+]
+
+[[package]]
+name = "pagination-aiogram3"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiogram" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/99/a1/c6c663b7d91366528354cc41a941ea798dd12a948dbc6ceb5dd830d29093/pagination_aiogram3-0.1.1.tar.gz", hash = "sha256:4a7a230c7beaa7f0ba4036e303ab32eb00137c45d551ae25bd06cc5fc55e607c", size = 5415, upload-time = "2025-06-27T00:58:39.047Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/f6/4db5657c2f1a24053c66261b394778c025be7a48d3c00a9de954bbafcf8a/pagination_aiogram3-0.1.1-py3-none-any.whl", hash = "sha256:3ca7ec4ac448dc25c970ed9da4b225acf2a7421d38ed17724abdd54f7271cbc5", size = 5660, upload-time = "2025-06-27T00:58:37.832Z" },
 ]
 
 [[package]]
