@@ -1,10 +1,13 @@
 import re
+from dataclasses import dataclass
 
 from aiogram import F, Router
 from aiogram.enums import ChatAction, ChatType, ParseMode
 from aiogram.filters import Command
 from aiogram.types import (
     CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
     Message,
     URLInputFile,
 )
@@ -21,6 +24,14 @@ router.message.filter(F.chat.type == ChatType.PRIVATE)
 book_id_pattern = re.compile(r"/b/(\d+)")
 
 
+@dataclass
+class FileUrl:
+    download_url: str
+    filename: str
+    format: str
+    callback_data: str
+
+
 @router.message(Command("start"))
 async def cmd_start(message):
     try:
@@ -30,6 +41,10 @@ async def cmd_start(message):
         )
     except Exception as e:
         logger.error(f"cmd_start error: {e}")
+        try:
+            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
+        except Exception:
+            pass
 
 
 @router.message(F.text.startswith("/b"), F.text.endswith(config.TG_BOT_NAME))
@@ -59,33 +74,87 @@ async def book_info(message: Message):
         )
     except Exception as e:
         logger.error(f"book_info error: {e}")
+        try:
+            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
+        except Exception:
+            pass
+
+
+@router.callback_query(F.data.startswith("downloadurl:"), F.data.endswith("download"))
+async def download_book_format(callback: CallbackQuery):
+    try:
+        if callback.data is None:
+            return None
+        file_url = await _get_file_url(callback.data, callback)
+        if callback.message is None:
+            return None
+
+        if callback.message and callback.bot is not None:
+            await callback.bot.send_chat_action(
+                chat_id=callback.message.chat.id, action=ChatAction.TYPING
+            )
+        if file_url is None:
+            await callback.message.answer(
+                "К сожалению, не удалось получить ссылку для скачивания книги."
+            )
+            return
+        answer = f"Для данной книги доступен только один формат: {file_url.format}"
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=f"Скачать {file_url.format.lower()}",
+                        callback_data=file_url.callback_data,
+                    )
+                ]
+            ]
+        )
+        await callback.message.answer(answer, reply_markup=kb)
+    except Exception as e:
+        logger.error(f"download_book_format error: {e}")
+        if callback.message is not None:
+            try:
+                await callback.message.answer(
+                    "Извините, произошла ошибка. Попробуйте позже."
+                )
+            except Exception:
+                pass
 
 
 @router.callback_query(F.data.startswith("downloadurl:"))
 async def download_book(callback: CallbackQuery):
     try:
+        callback_data = callback.data
+        if callback_data is None:
+            return
+        if callback.message is None:
+            return
         if callback.message and callback.bot is not None:
             await callback.bot.send_chat_action(
                 chat_id=callback.message.chat.id, action=ChatAction.TYPING
             )
-        doc_url = callback.data.split("downloadurl:")[-1]  # type: ignore
-        doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
-        logger.info(f"{doc_url=}")
+        if "downloads" in callback_data:
+            callback_data = callback_data.replace("downloads", "download")
+        file_url = await _get_file_url(callback_data, callback)
+        if file_url is None:
+            await callback.message.answer(
+                "К сожалению, не удалось получить ссылку для скачивания книги."
+            )
+            return
+        logger.info(f"{file_url.filename=} {file_url.download_url=}")
         await callback.answer("Загрузка началась...")
-        async with FlibustaParser() as parser:
-            download_url = await parser.get_download_url(doc_url)
-            if download_url is None:
-                if callback.message is not None:
-                    await callback.message.answer(
-                        "К сожалению, не удалось получить ссылку для скачивания книги."
-                    )
-                return
-            filename = await parser.get_filename_from_metadata(download_url)
-        doc = URLInputFile(url=download_url, filename=filename)
+        doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
         if callback.message is not None:
             await callback.message.answer_document(document=doc)
     except Exception as e:
         logger.error(f"download_book error: {e}")
+        if callback.message is not None:
+            try:
+                await callback.message.answer(
+                    "Извините, произошла ошибка. Попробуйте позже."
+                )
+            except Exception:
+                pass
 
 
 @router.message(F.text)
@@ -116,6 +185,37 @@ async def search_books(message: Message):
         await message.answer(answer)
     except Exception as e:
         logger.error(f"search_books error: {e}")
+        try:
+            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
+        except Exception:
+            pass
+
+
+async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl | None:
+    doc_url = callback_data.split("downloadurl:")[-1]  # type: ignore
+    doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
+    async with FlibustaParser() as parser:
+        download_url = await parser.get_download_url(doc_url)
+        if download_url is None:
+            if callback.message is not None:
+                await callback.message.answer(
+                    "К сожалению, не удалось получить ссылку для скачивания книги."
+                )
+            return None
+        filename = await parser.get_filename_from_metadata(download_url)
+        if filename is None:
+            return None
+        format_index = -1 if "zip" not in filename else -2
+        format = filename.split(".")[format_index]
+        # Do not toch, need to correct selecting download book router
+        if "download" in callback_data:
+            callback_data += "s"
+        return FileUrl(
+            download_url=download_url,
+            filename=filename,
+            format=format,
+            callback_data=callback_data,
+        )
 
 
 async def _get_book_info(book_id: int, message: Message) -> schemas.BookInfoData | None:
