@@ -11,7 +11,6 @@ from aiogram.types import (
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.db import db_session, storage
 from flibusta_bot.flibusta_parser import App as FlibustaParser
 from flibusta_bot.flibusta_parser import schemas
 from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
@@ -74,18 +73,7 @@ async def download_book(callback: CallbackQuery):
     doc = URLInputFile(url=download_url, filename=filename)
     if callback.message is not None:
         await callback.message.answer_document(document=doc)
-        # Save download event to DB
-        try:
-            # Extract book_id from doc_url (assuming .../b/<book_id>/...)
-            match = book_id_pattern.search(doc_url)
-            book_id = int(match.group(1)) if match else None
-            if book_id:
-                async with db_session() as session:
-                    await storage.books.register_downloaded_book(
-                        session, title=filename or "Unknown book", url=doc_url
-                    )
-        except Exception as e:
-            logger.warning(f"Could not save download event to DB: {e}")
+        
 
 
 @router.message(F.text)
