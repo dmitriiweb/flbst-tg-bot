@@ -11,6 +11,7 @@ services:
       - ./flibusta_bot:/app/flibusta_bot
       - ./migrations:/app/migrations
       - ./alembic.ini:/app/alembic.ini
+      - ./logs:/app/logs
     ports:
       - "9998:8000"
     sysctls:

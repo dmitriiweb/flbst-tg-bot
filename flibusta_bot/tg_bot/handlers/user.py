@@ -73,7 +73,6 @@ async def download_book(callback: CallbackQuery):
     doc = URLInputFile(url=download_url, filename=filename)
     if callback.message is not None:
         await callback.message.answer_document(document=doc)
-        
 
 
 @router.message(F.text)

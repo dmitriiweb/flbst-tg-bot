@@ -1,8 +1,12 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / "logs"
 
 LIBRARY_BASE_URL = (os.getenv("BASE_URL", "https://flibusta.is")).rstrip("/")
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")

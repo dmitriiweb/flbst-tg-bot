@@ -18,6 +18,7 @@ COPY flibusta_bot flibusta_bot/
 COPY migrations migrations/
 COPY alembic.ini alembic.ini
 COPY README.md README.md
+COPY logs logs/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-editable
