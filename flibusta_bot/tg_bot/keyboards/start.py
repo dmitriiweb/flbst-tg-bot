@@ -11,5 +11,5 @@ def get_start_keyboard() -> ReplyKeyboardMarkup:
         keyboard=[
             [KeyboardButton(text=SEARCH_BY_TITLE_BUTTON)],
             [KeyboardButton(text=SEARCH_BY_AUTHOR_BUTTON)],
-        ]
+        ],
     )
