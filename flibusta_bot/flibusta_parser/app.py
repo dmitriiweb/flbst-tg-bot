@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import re
 
-from loguru import logger
-
 from . import html_parser, schemas
 from .http_client import HttpClient
 
@@ -33,6 +31,25 @@ class App:
 
         return url_pages, first_page_books if first_page_books else []
 
+    async def search_books_by_author(
+        self, author_url: str
+    ) -> tuple[UrlPages, list[schemas.BookListingData]]:
+        response = await self.http_client.get_author_books(author_url)
+        if not response:
+            return [], []
+        url_pages = html_parser.get_all_pages_in_listing(response.content, response.url)
+        first_page_books = html_parser.parse_listing_from_author(
+            response.content, author_url
+        )
+        return url_pages, first_page_books if first_page_books else []
+
+    async def search_authors(self, query: str) -> list[schemas.AuthorListingData]:
+        response = await self.http_client.search_books(query)
+        if not response:
+            return []
+        authors = html_parser.parse_authors(response.content)
+        return authors
+
     async def get_listing_by_url(
         self, url: str, previous_url: str | None
     ) -> list[schemas.BookListingData]:
@@ -49,7 +66,6 @@ class App:
         self, book_id: str | int, previous_url: str | None = None
     ) -> schemas.BookInfoData | None:
         previous_url = previous_url or self.http_client.base_url
-        logger.debug(f"{book_id=} {previous_url=}")
         response = await self.http_client.get_book_info(str(book_id), previous_url)
         if not response:
             return None

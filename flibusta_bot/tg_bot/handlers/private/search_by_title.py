@@ -18,8 +18,11 @@ from flibusta_bot import config
 from flibusta_bot.flibusta_parser import App as FlibustaParser
 from flibusta_bot.flibusta_parser import schemas
 from flibusta_bot.tg_bot import states as bot_states
-from flibusta_bot.tg_bot.keyboards import books_listing as books_listing_keyboard
-from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
+from flibusta_bot.tg_bot.keyboards import (
+    choose_download_format_keyboard,
+    get_start_keyboard,
+    item_listing_kb,
+)
 
 router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
@@ -49,14 +52,20 @@ async def search_books(message: Message, state: FSMContext):
             poges, books = await parser.search_book(message.text)
 
         if not books:
-            answer = "К сожалению, не удалось найти ни одной книги."
+            answer = (
+                "К сожалению, не удалось найти ни одной книги.\n\n"
+                "Попробуйте найти книгу по другому запросу "
+                "или нажмите кнопку Отмена"
+            )
             await message.answer(answer)
             return
 
         total_books = len(books)
+        paginator = item_listing_kb(books, callback_prefix="book")
+        kb = await paginator.render_kb()
         await message.answer(
             f"Найдено {total_books} книг:\n\n",
-            reply_markup=books_listing_keyboard.book_listing_kb(books)(),
+            reply_markup=kb,
         )
         await state.set_state(bot_states.SearchByTitleStates.book_selected)
     except Exception as e:
@@ -184,8 +193,9 @@ async def download_book(callback: CallbackQuery, state: FSMContext):
         logger.info(f"{file_url.filename=} {file_url.download_url=}")
         await callback.answer("Загрузка началась...")
         doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
+        kb = get_start_keyboard()
         if callback.message is not None:
-            await callback.message.answer_document(document=doc)
+            await callback.message.answer_document(document=doc, reply_markup=kb)
         await state.clear()
     except Exception as e:
         logger.error(f"download_book error: {e}")
