@@ -10,3 +10,4 @@ class SearchByTitleStates(StatesGroup):
 
 class SearchByAuthorStates(StatesGroup):
     search_by_author = State()
+    choose_book = State()
