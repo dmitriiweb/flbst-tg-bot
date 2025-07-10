@@ -31,6 +31,25 @@ class App:
 
         return url_pages, first_page_books if first_page_books else []
 
+    async def search_books_by_author(
+        self, author_url: str
+    ) -> tuple[UrlPages, list[schemas.BookListingData]]:
+        response = await self.http_client.get_author_books(author_url)
+        if not response:
+            return [], []
+        url_pages = html_parser.get_all_pages_in_listing(response.content, response.url)
+        first_page_books = html_parser.parse_listing_from_author(
+            response.content, author_url
+        )
+        return url_pages, first_page_books if first_page_books else []
+
+    async def search_authors(self, query: str) -> list[schemas.AuthorListingData]:
+        response = await self.http_client.search_books(query)
+        if not response:
+            return []
+        authors = html_parser.parse_authors(response.content)
+        return authors
+
     async def get_listing_by_url(
         self, url: str, previous_url: str | None
     ) -> list[schemas.BookListingData]:

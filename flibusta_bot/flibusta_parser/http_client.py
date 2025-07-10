@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import io
 from typing import Any, Literal
 
@@ -42,8 +43,8 @@ class HttpClient:
         url = f"{self.base_url}{path}"
         try:
             response = await self.client.get(url, headers=headers)
-        except Exception as e:
-            logger.error(f"Error while making request: {e} | {url=}")
+        except Exception:
+            logger.error(f"Error while making request: {url=}")
             return None
         if response.status_code != 200:
             logger.error(f"Error while making request: {response.status_code} | {url=}")
@@ -126,3 +127,18 @@ class HttpClient:
         except Exception as e:
             logger.error(f"Error while getting file metadata: {e} | {url=}")
             return None
+
+    async def get_author_books(self, author_url: str) -> schemas.HttpResponse | None:
+        headers = self.default_headers.copy()
+        headers["referer"] = self.base_url
+        # author_url may be absolute or relative; ensure it's relative
+        if author_url.startswith("http"):
+            # Remove base_url if present
+            if author_url.startswith(self.base_url):
+                path = author_url[len(self.base_url) :]
+            else:
+                # fallback: treat as full URL
+                path = author_url
+        else:
+            path = author_url.lstrip("/")
+        return await self._make_request(path, headers=headers)

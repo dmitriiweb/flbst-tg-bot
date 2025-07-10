@@ -7,7 +7,7 @@ def choose_download_format_keyboard(download_urls: list[str]) -> InlineKeyboardM
         file_format = download_url.split("/")[-1].lower()
         button = InlineKeyboardButton(
             text=file_format if "download" not in file_format else "Скачать",
-            callback_data=f"downloadurl:{download_url}",
+            callback_data=f"downloadurl|{download_url}",
         )
         buttons.append(button)
 

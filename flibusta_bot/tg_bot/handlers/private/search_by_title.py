@@ -3,7 +3,8 @@ from dataclasses import dataclass
 
 from aiogram import F, Router
 from aiogram.enums import ChatAction, ChatType, ParseMode
-from aiogram.filters import Command
+from aiogram.filters import StateFilter
+from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -16,7 +17,12 @@ from loguru import logger
 from flibusta_bot import config
 from flibusta_bot.flibusta_parser import App as FlibustaParser
 from flibusta_bot.flibusta_parser import schemas
-from flibusta_bot.tg_bot.keyboards import choose_download_format_keyboard
+from flibusta_bot.tg_bot import states as bot_states
+from flibusta_bot.tg_bot.keyboards import (
+    choose_download_format_keyboard,
+    get_start_keyboard,
+    item_listing_kb,
+)
 
 router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
@@ -32,32 +38,64 @@ class FileUrl:
     callback_data: str
 
 
-@router.message(Command("start"))
-async def cmd_start(message):
+@router.message(StateFilter(bot_states.SearchByTitleStates.search_by_title), F.text)
+async def search_books(message: Message, state: FSMContext):
     try:
+        if message.bot is not None:
+            await message.bot.send_chat_action(
+                chat_id=message.chat.id, action=ChatAction.TYPING
+            )
+        if not message.text:
+            await message.answer("Пустой запрос.")
+            return
+        async with FlibustaParser() as parser:
+            poges, books = await parser.search_book(message.text)
+
+        if not books:
+            answer = (
+                "К сожалению, не удалось найти ни одной книги.\n\n"
+                "Попробуйте найти книгу по другому запросу "
+                "или нажмите кнопку Отмена"
+            )
+            await message.answer(answer)
+            return
+
+        total_books = len(books)
+        paginator = item_listing_kb(books, callback_prefix="book")
+        kb = await paginator.render_kb()
         await message.answer(
-            "Привет! Я бот для поиска книг в библиотеке. "
-            "Отправь мне название книги и я помогу тебе найти её"
+            f"Найдено {total_books} книг:\n\n",
+            reply_markup=kb,
         )
+        await state.set_state(bot_states.SearchByTitleStates.book_selected)
     except Exception as e:
-        logger.error(f"cmd_start error: {e}")
+        logger.error(f"search_books error: {e}")
         try:
             await message.answer("Извините, произошла ошибка. Попробуйте позже.")
         except Exception:
             pass
 
 
-@router.message(F.text.startswith("/b"), F.text.endswith(config.TG_BOT_NAME))
-async def book_info(message: Message):
+@router.callback_query(
+    StateFilter(bot_states.SearchByTitleStates.book_selected),
+    F.data.startswith("book|"),
+)
+async def book_info(callback: CallbackQuery, state: FSMContext):
+    callback_message = callback.message
+    callback_data = callback.data
     try:
-        if message.bot is not None:
-            await message.bot.send_chat_action(
-                chat_id=message.chat.id, action=ChatAction.TYPING
+        if callback_message is None:
+            return None
+        if callback_data is None:
+            return None
+        if callback_message.bot is not None:
+            await callback_message.bot.send_chat_action(
+                chat_id=callback_message.chat.id, action=ChatAction.TYPING
             )
-        book_id: str = message.text.split("/b", 1)[-1].split("@")[0]  # type: ignore
-        book_info = await _get_book_info(int(book_id), message)
+        book_id: str = callback_data.split("|", 1)[-1].split("@")[0]  # type: ignore
+        book_info = await _get_book_info(int(book_id))
         if book_info is None:
-            await message.answer(
+            await callback_message.answer(
                 "К сожалению, не удалось найти информацию о книге с таким ID."
             )
             return
@@ -67,21 +105,29 @@ async def book_info(message: Message):
         )
         download_urls = [i.url for i in book_info.download_urls]
         reply_markup = choose_download_format_keyboard(download_urls=download_urls)
-        await message.answer(
+        await callback_message.answer(
             book_info.to_telegram_message(),
             parse_mode=ParseMode.HTML,
             reply_markup=reply_markup,
         )
+        await state.set_state(bot_states.SearchByTitleStates.choose_download_format)
     except Exception as e:
         logger.error(f"book_info error: {e}")
+        message = callback.message
+        if message is None:
+            return None
         try:
             await message.answer("Извините, произошла ошибка. Попробуйте позже.")
         except Exception:
             pass
 
 
-@router.callback_query(F.data.startswith("downloadurl:"), F.data.endswith("download"))
-async def download_book_format(callback: CallbackQuery):
+@router.callback_query(
+    StateFilter(bot_states.SearchByTitleStates.choose_download_format),
+    F.data.startswith("downloadurl|"),
+    F.data.endswith("download"),
+)
+async def download_book_format(callback: CallbackQuery, state: FSMContext):
     try:
         if callback.data is None:
             return None
@@ -121,16 +167,19 @@ async def download_book_format(callback: CallbackQuery):
                 pass
 
 
-@router.callback_query(F.data.startswith("downloadurl:"))
-async def download_book(callback: CallbackQuery):
+@router.callback_query(
+    StateFilter(bot_states.SearchByTitleStates.choose_download_format),
+    F.data.startswith("downloadurl|"),
+)
+async def download_book(callback: CallbackQuery, state: FSMContext):
     try:
         callback_data = callback.data
         if callback_data is None:
             return
         if callback.message is None:
             return
-        if callback.message and callback.bot is not None:
-            await callback.bot.send_chat_action(
+        if callback.message and callback.message.bot is not None:
+            await callback.message.bot.send_chat_action(
                 chat_id=callback.message.chat.id, action=ChatAction.TYPING
             )
         if "downloads" in callback_data:
@@ -144,8 +193,10 @@ async def download_book(callback: CallbackQuery):
         logger.info(f"{file_url.filename=} {file_url.download_url=}")
         await callback.answer("Загрузка началась...")
         doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
+        kb = get_start_keyboard()
         if callback.message is not None:
-            await callback.message.answer_document(document=doc)
+            await callback.message.answer_document(document=doc, reply_markup=kb)
+        await state.clear()
     except Exception as e:
         logger.error(f"download_book error: {e}")
         if callback.message is not None:
@@ -157,42 +208,8 @@ async def download_book(callback: CallbackQuery):
                 pass
 
 
-@router.message(F.text)
-async def search_books(message: Message):
-    try:
-        if message.bot is not None:
-            await message.bot.send_chat_action(
-                chat_id=message.chat.id, action=ChatAction.TYPING
-            )
-        if not message.text:
-            await message.answer("Пустой запрос.")
-            return
-        async with FlibustaParser() as parser:
-            poges, books = await parser.search_book(message.text)
-
-        if not books:
-            answer = "К сожалению, не удалось найти ни одной книги."
-            await message.answer(answer)
-            return
-
-        # TODO: add pagination for one library page (50 books) - 10 books per telegram page
-        books = books[:10]
-        total_books = len(books)
-        answer = f"Найдено {total_books} книг:\n\n"
-        books_list = [str(i) for i in books]
-        books_text = "\n\n".join(books_list)
-        answer += books_text
-        await message.answer(answer)
-    except Exception as e:
-        logger.error(f"search_books error: {e}")
-        try:
-            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
-        except Exception:
-            pass
-
-
 async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl | None:
-    doc_url = callback_data.split("downloadurl:")[-1]  # type: ignore
+    doc_url = callback_data.split("downloadurl|")[-1]  # type: ignore
     doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
     async with FlibustaParser() as parser:
         download_url = await parser.get_download_url(doc_url)
@@ -218,10 +235,12 @@ async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl 
         )
 
 
-async def _get_book_info(book_id: int, message: Message) -> schemas.BookInfoData | None:
+async def _get_book_info(
+    book_id: int, previous_url: str | None = None
+) -> schemas.BookInfoData | None:
     try:
         async with FlibustaParser() as parser:
-            book_info = await parser.get_book_info(book_id, message.text)
+            book_info = await parser.get_book_info(book_id, previous_url)
         return book_info
     except Exception as e:
         logger.error(f"_get_book_info error: {e}")

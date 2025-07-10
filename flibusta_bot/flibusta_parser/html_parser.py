@@ -142,3 +142,94 @@ def _get_download_links(tree: lh.HtmlElement) -> list[schemas.BookDownloadLinks]
         format = i.split("/")[-1]
         download_links.append(schemas.BookDownloadLinks(url=i, format=format))
     return download_links
+
+
+def parse_authors(html: str) -> list[schemas.AuthorListingData]:
+    tree = lh.fromstring(html)
+    try:
+        ul_candidates_raw = tree.xpath(
+            '//h3[contains(text(), "Найденные писатели")]/following-sibling::ul[1]'
+        )
+        if not isinstance(ul_candidates_raw, list):
+            ul_candidates_raw = []
+        authors_ul = next(
+            (el for el in ul_candidates_raw if isinstance(el, lh.HtmlElement)), None
+        )
+        if authors_ul is None or not isinstance(authors_ul, lh.HtmlElement):
+            return []
+        authors_list = []
+        if isinstance(authors_ul, lh.HtmlElement):
+            li_candidates_raw = authors_ul.xpath("./li")
+            if isinstance(li_candidates_raw, list):
+                for li in li_candidates_raw:
+                    if isinstance(li, lh.HtmlElement):
+                        authors_list.append(li)
+    except Exception as e:
+        logger.error(f"Error while parsing authors listing: {e}")
+        return []
+    base_url = config.LIBRARY_BASE_URL.rstrip("/")
+    authors = []
+    for li in authors_list:
+        try:
+            if not isinstance(li, lh.HtmlElement):
+                continue
+            a_candidates_raw = li.xpath("./a") if isinstance(li, lh.HtmlElement) else []
+            a_tag = next(
+                (a for a in a_candidates_raw if isinstance(a, lh.HtmlElement)), None
+            )
+            if not a_tag:
+                continue
+            author_url = a_tag.get("href")
+            author_name = a_tag.text_content().strip()
+            authors.append(
+                schemas.AuthorListingData(
+                    name=author_name, author_url=f"{base_url}/{author_url}"
+                )
+            )
+        except Exception as e:
+            logger.error(f"Error parsing author li: {e}")
+            continue
+    return authors
+
+
+def parse_listing_from_author(
+    html: str, author_url: str
+) -> list[schemas.BookListingData]:
+    tree = lh.fromstring(html)
+    base_url = config.LIBRARY_BASE_URL.rstrip("/")
+    books = []
+    try:
+        book_links_raw = tree.xpath(
+            '//a[starts-with(@href, "/b/") and not(contains(@href, "/read")) and not(contains(@href, "/fb2")) and not(contains(@href, "/epub")) and not(contains(@href, "/mobi"))]'
+        )
+        if not isinstance(book_links_raw, list):
+            book_links_raw = []
+        book_links = [a for a in book_links_raw if isinstance(a, lh.HtmlElement)]
+        for a in book_links:
+            book_href = a.get("href")
+            title = a.text_content().strip()
+            if not book_href or not book_href.startswith("/b/"):
+                continue
+            author = ""
+            parent = a.getparent()
+            while parent is not None:
+                if not isinstance(parent, lh.HtmlElement):
+                    break
+                author_a = parent.xpath(
+                    './/a[@href="{}" and contains(@class, "active")]'.format(author_url)
+                )
+                if author_a and isinstance(author_a[0], lh.HtmlElement):
+                    author = author_a[0].text_content().strip()
+                    break
+                parent = parent.getparent()
+            listing_data = schemas.BookListingData(
+                title=title,
+                book_url=f"{base_url}{book_href}",
+                author=author,
+                author_url=f"{base_url}{author_url}",
+            )
+            books.append(listing_data)
+    except Exception as e:
+        logger.error(f"Error parsing author book listing: {e}")
+        return []
+    return books
