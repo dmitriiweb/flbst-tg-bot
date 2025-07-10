@@ -17,6 +17,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY flibusta_bot flibusta_bot/
 COPY README.md README.md
 COPY logs logs/
+COPY locales locales/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-editable

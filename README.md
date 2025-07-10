@@ -1,6 +1,10 @@
 # flbst-tg-bot
 Flibusta Telegram Bot
 
+## Known bots:
+[Search in the Library Bot](https://t.me/search_in_the_library_bot)
+
+
 ## How to run
 
 ### Clone the project

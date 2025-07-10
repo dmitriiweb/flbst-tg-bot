@@ -1,15 +1,14 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-SEARCH_BY_TITLE_BUTTON = "📚 Поиск по названию"
-SEARCH_BY_AUTHOR_BUTTON = "👤 Поиск по автору"
 
-
-def get_start_keyboard() -> ReplyKeyboardMarkup:
+def get_start_keyboard(
+    search_by_title_button: str, search_by_author_button: str
+) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         resize_keyboard=True,
         one_time_keyboard=True,
         keyboard=[
-            [KeyboardButton(text=SEARCH_BY_TITLE_BUTTON)],
-            [KeyboardButton(text=SEARCH_BY_AUTHOR_BUTTON)],
+            [KeyboardButton(text=search_by_title_button)],
+            [KeyboardButton(text=search_by_author_button)],
         ],
     )

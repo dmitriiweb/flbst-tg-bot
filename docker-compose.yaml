@@ -10,6 +10,7 @@ services:
     volumes:
       - ./flibusta_bot:/app/flibusta_bot
       - ./logs:/app/logs
+      - ./locales:/app/locales
     ports:
       - "9998:8000"
     sysctls:

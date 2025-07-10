@@ -19,9 +19,7 @@ class App:
     async def on_startup(self):
         await self.bot.set_my_commands(
             [
-                tg_types.BotCommand(
-                    command="start", description="Начало работы с ботом"
-                ),
+                tg_types.BotCommand(command="start", description="Start the bot"),
             ],
         )
         register_handlers(self.dp)
