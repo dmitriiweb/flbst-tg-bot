@@ -8,7 +8,37 @@ LOCALES_DIR = config.BASE_DIR / "locales"
 RU_LOCALE_FILE = LOCALES_DIR / "ru" / "LC_MESSAGES" / "tg-bot.ftl"
 EN_LOCALE_FILE = LOCALES_DIR / "en" / "LC_MESSAGES" / "tg-bot.ftl"
 
-available_locales = ["en", "ru"]
+available_locales = [
+    "ar",  # Arabic
+    "az",  # Azerbaijani
+    "bg",  # Bulgarian
+    "de",  # German
+    "en",  # English
+    "es",  # Spanish
+    "fa",  # Persian
+    "fi",  # Finnish
+    "fr",  # French
+    "he",  # Hebrew
+    "hi",  # Hindi
+    "id",  # Indonesian
+    "it",  # Italian
+    "ja",  # Japanese
+    "kk",  # Kazakh
+    "ko",  # Korean
+    "mn",  # Mongolian
+    "nl",  # Dutch
+    "pl",  # Polish
+    "pt",  # Portuguese
+    "ro",  # Romanian
+    "ru",  # Russian
+    "tg",  # Tajik
+    "th",  # Thai
+    "tr",  # Turkish
+    "uk",  # Ukrainian
+    "uz",  # Uzbek
+    "zh-hans",  # Chinese Simplified
+    "zh-hant",  # Chinese Traditional
+]
 translator_hub = TranslatorHub(
     {
         "ru": ("ru",),
