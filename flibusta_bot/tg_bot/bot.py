@@ -6,12 +6,13 @@ from .. import config
 
 LOCALES_DIR = config.BASE_DIR / "locales"
 RU_LOCALE_FILE = LOCALES_DIR / "ru" / "LC_MESSAGES" / "tg-bot.ftl"
+EN_LOCALE_FILE = LOCALES_DIR / "en" / "LC_MESSAGES" / "tg-bot.ftl"
 
 available_locales = ["en", "ru"]
 translator_hub = TranslatorHub(
     {
         "ru": ("ru",),
-        "en": ("ru",),
+        "en": ("en",),
     },
     [
         FluentTranslator(
@@ -20,7 +21,7 @@ translator_hub = TranslatorHub(
         ),
         FluentTranslator(
             "en",
-            translator=FluentBundle.from_files("ru", filenames=[RU_LOCALE_FILE]),
+            translator=FluentBundle.from_files("en", filenames=[EN_LOCALE_FILE]),
         ),
     ],
 )
