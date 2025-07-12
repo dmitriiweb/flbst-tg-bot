@@ -104,7 +104,7 @@ async def get_book_info_handler(callback: CallbackQuery, state: FSMContext, **da
             f"{book_info.id=} {book_info.title=} {book_info.author=} {book_info.book_url=}"
         )
         download_urls = [i.url for i in book_info.download_urls]
-        reply_markup = choose_download_format_keyboard(download_urls=download_urls)
+        reply_markup = choose_download_format_keyboard(download_urls=download_urls, download_button_text=i18n.search.by.title.download.button())
         await callback_message.answer(
             book_info.to_telegram_message(),
             parse_mode=ParseMode.HTML,
@@ -151,7 +151,9 @@ async def download_book_format(
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        text=f"Скачать {file_url.format.lower()}",
+                        text=i18n.search.by.title.download.button.with_.format(
+                            format=file_url.format.lower()
+                        ),
                         callback_data=file_url.callback_data,
                     )
                 ]

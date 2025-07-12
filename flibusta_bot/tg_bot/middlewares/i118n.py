@@ -13,6 +13,10 @@ class TranslatorRunnerMiddleware(BaseMiddleware):
         data: dict[str, Any],
     ) -> Any:  # type: ignore[override]
         hub: TranslatorHub = data.get("translator_hub")  # type: ignore
-        language_code = event.from_user.language_code if event.from_user and event.from_user.language_code else "ru"
+        language_code = (
+            event.from_user.language_code
+            if event.from_user and event.from_user.language_code
+            else "ru"
+        )
         data["i18n"] = hub.get_translator_by_locale(language_code)
         return await handler(event, data)

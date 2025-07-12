@@ -19,8 +19,10 @@ search-by-title-found-books =
 search-by-title-not_-found-book-info = К сожалению, не удалось найти информацию о книге с таким ID.
 search-by-title-error-generic = Извините, произошла ошибка. Попробуйте позже.
 search-by-title-not_-found-download-link = К сожалению, не удалось получить ссылку для скачивания книги.
-search-by-title-only-one-format = Для данной книги доступен только один формат: {format}
+search-by-title-only-one-format = Для данной книги доступен только один формат: { $format }
 search-by-title-download-started = Загрузка началась...
+search-by-title-download-button-with_-format = Скачать { $format }
+search-by-title-download-button = Скачать
 
 search-by-author-empty-query = Пустой запрос.
 search-by-author-not_-found-author = К сожалению, не удалось найти ни одного автора.\n\nПопробуйте найти автора по другому запросу или нажмите кнопку Отмена
