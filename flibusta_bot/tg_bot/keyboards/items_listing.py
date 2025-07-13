@@ -1,11 +1,10 @@
+from collections.abc import Sequence
 from typing import Protocol
 
 from aiogram.types import InlineKeyboardButton
 from aiogramx import Paginator
 
 from flibusta_bot.tg_bot.bot import dp
-
-CANCEL_BUTTON = "❌ Отмена"
 
 Paginator.register(dp)
 
@@ -17,7 +16,7 @@ class ItemListingData(Protocol):
 
 
 def item_listing_kb(
-    items: list[ItemListingData], callback_prefix: str = "book"
+    items: Sequence[ItemListingData], callback_prefix: str = "book"
 ) -> Paginator:
     inline_keyboard = [
         InlineKeyboardButton(

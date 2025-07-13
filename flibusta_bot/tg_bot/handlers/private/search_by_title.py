@@ -12,6 +12,7 @@ from aiogram.types import (
     Message,
     URLInputFile,
 )
+from fluentogram import TranslatorRunner
 from loguru import logger
 
 from flibusta_bot import config
@@ -23,9 +24,12 @@ from flibusta_bot.tg_bot.keyboards import (
     get_start_keyboard,
     item_listing_kb,
 )
+from flibusta_bot.tg_bot.middlewares.i118n import TranslatorRunnerMiddleware
 
 router = Router()
 router.message.filter(F.chat.type == ChatType.PRIVATE)
+router.message.middleware(TranslatorRunnerMiddleware())
+router.callback_query.middleware(TranslatorRunnerMiddleware())
 
 book_id_pattern = re.compile(r"/b/(\d+)")
 
@@ -39,39 +43,36 @@ class FileUrl:
 
 
 @router.message(StateFilter(bot_states.SearchByTitleStates.search_by_title), F.text)
-async def search_books(message: Message, state: FSMContext):
+async def search_books(
+    message: Message, state: FSMContext, i18n: TranslatorRunner, **data
+):
     try:
         if message.bot is not None:
             await message.bot.send_chat_action(
                 chat_id=message.chat.id, action=ChatAction.TYPING
             )
         if not message.text:
-            await message.answer("Пустой запрос.")
+            await message.answer(i18n.search.by.title.empty.query())
             return
         async with FlibustaParser() as parser:
             poges, books = await parser.search_book(message.text)
 
         if not books:
-            answer = (
-                "К сожалению, не удалось найти ни одной книги.\n\n"
-                "Попробуйте найти книгу по другому запросу "
-                "или нажмите кнопку Отмена"
-            )
-            await message.answer(answer)
+            await message.answer(i18n.search.by.title.not_.found.title())
             return
 
         total_books = len(books)
         paginator = item_listing_kb(books, callback_prefix="book")
         kb = await paginator.render_kb()
         await message.answer(
-            f"Найдено {total_books} книг:\n\n",
+            i18n.search.by.title.found.books(total_books=total_books),
             reply_markup=kb,
         )
         await state.set_state(bot_states.SearchByTitleStates.book_selected)
     except Exception as e:
         logger.error(f"search_books error: {e}")
         try:
-            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
+            await message.answer(i18n.search.by.title.error.generic())
         except Exception:
             pass
 
@@ -80,7 +81,8 @@ async def search_books(message: Message, state: FSMContext):
     StateFilter(bot_states.SearchByTitleStates.book_selected),
     F.data.startswith("book|"),
 )
-async def book_info(callback: CallbackQuery, state: FSMContext):
+async def get_book_info_handler(callback: CallbackQuery, state: FSMContext, **data):
+    i18n = data["i18n"]
     callback_message = callback.message
     callback_data = callback.data
     try:
@@ -93,18 +95,16 @@ async def book_info(callback: CallbackQuery, state: FSMContext):
                 chat_id=callback_message.chat.id, action=ChatAction.TYPING
             )
         book_id: str = callback_data.split("|", 1)[-1].split("@")[0]  # type: ignore
-        book_info = await _get_book_info(int(book_id))
+        book_info = await _get_book_info(int(book_id), i18n)
         if book_info is None:
-            await callback_message.answer(
-                "К сожалению, не удалось найти информацию о книге с таким ID."
-            )
+            await callback_message.answer(i18n.search.by.title.not_.found.book.info())
             return
 
         logger.info(
             f"{book_info.id=} {book_info.title=} {book_info.author=} {book_info.book_url=}"
         )
         download_urls = [i.url for i in book_info.download_urls]
-        reply_markup = choose_download_format_keyboard(download_urls=download_urls)
+        reply_markup = choose_download_format_keyboard(download_urls=download_urls, download_button_text=i18n.search.by.title.download.button())
         await callback_message.answer(
             book_info.to_telegram_message(),
             parse_mode=ParseMode.HTML,
@@ -117,7 +117,7 @@ async def book_info(callback: CallbackQuery, state: FSMContext):
         if message is None:
             return None
         try:
-            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
+            await message.answer(i18n.search.by.title.error.generic())
         except Exception:
             pass
 
@@ -127,11 +127,13 @@ async def book_info(callback: CallbackQuery, state: FSMContext):
     F.data.startswith("downloadurl|"),
     F.data.endswith("download"),
 )
-async def download_book_format(callback: CallbackQuery, state: FSMContext):
+async def download_book_format(
+    callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
+):
     try:
         if callback.data is None:
             return None
-        file_url = await _get_file_url(callback.data, callback)
+        file_url = await _get_file_url(callback.data, callback, i18n)
         if callback.message is None:
             return None
 
@@ -141,15 +143,17 @@ async def download_book_format(callback: CallbackQuery, state: FSMContext):
             )
         if file_url is None:
             await callback.message.answer(
-                "К сожалению, не удалось получить ссылку для скачивания книги."
+                i18n.search.by.title.not_.found.download.link()
             )
             return
-        answer = f"Для данной книги доступен только один формат: {file_url.format}"
+        answer = i18n.search.by.title.only.one.format(format=file_url.format)
         kb = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        text=f"Скачать {file_url.format.lower()}",
+                        text=i18n.search.by.title.download.button.with_.format(
+                            format=file_url.format.lower()
+                        ),
                         callback_data=file_url.callback_data,
                     )
                 ]
@@ -160,9 +164,7 @@ async def download_book_format(callback: CallbackQuery, state: FSMContext):
         logger.error(f"download_book_format error: {e}")
         if callback.message is not None:
             try:
-                await callback.message.answer(
-                    "Извините, произошла ошибка. Попробуйте позже."
-                )
+                await callback.message.answer(i18n.search.by.title.error.generic())
             except Exception:
                 pass
 
@@ -171,7 +173,9 @@ async def download_book_format(callback: CallbackQuery, state: FSMContext):
     StateFilter(bot_states.SearchByTitleStates.choose_download_format),
     F.data.startswith("downloadurl|"),
 )
-async def download_book(callback: CallbackQuery, state: FSMContext):
+async def download_book(
+    callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
+):
     try:
         callback_data = callback.data
         if callback_data is None:
@@ -184,16 +188,19 @@ async def download_book(callback: CallbackQuery, state: FSMContext):
             )
         if "downloads" in callback_data:
             callback_data = callback_data.replace("downloads", "download")
-        file_url = await _get_file_url(callback_data, callback)
+        file_url = await _get_file_url(callback_data, callback, i18n)
         if file_url is None:
             await callback.message.answer(
-                "К сожалению, не удалось получить ссылку для скачивания книги."
+                i18n.search.by.title.not_.found.download.link()
             )
             return
         logger.info(f"{file_url.filename=} {file_url.download_url=}")
-        await callback.answer("Загрузка началась...")
+        await callback.answer(i18n.search.by.title.download.started())
         doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
-        kb = get_start_keyboard()
+        kb = get_start_keyboard(
+            i18n.start.search.by.title.button(),
+            i18n.start.search.by.author.button(),
+        )
         if callback.message is not None:
             await callback.message.answer_document(document=doc, reply_markup=kb)
         await state.clear()
@@ -201,14 +208,14 @@ async def download_book(callback: CallbackQuery, state: FSMContext):
         logger.error(f"download_book error: {e}")
         if callback.message is not None:
             try:
-                await callback.message.answer(
-                    "Извините, произошла ошибка. Попробуйте позже."
-                )
+                await callback.message.answer(i18n.search.by.title.error.generic())
             except Exception:
                 pass
 
 
-async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl | None:
+async def _get_file_url(
+    callback_data: str, callback: CallbackQuery, i18n: TranslatorRunner
+) -> FileUrl | None:
     doc_url = callback_data.split("downloadurl|")[-1]  # type: ignore
     doc_url = f"{config.LIBRARY_BASE_URL}{doc_url}"
     async with FlibustaParser() as parser:
@@ -216,7 +223,7 @@ async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl 
         if download_url is None:
             if callback.message is not None:
                 await callback.message.answer(
-                    "К сожалению, не удалось получить ссылку для скачивания книги."
+                    i18n.search.by.title.not_.found.download.link()
                 )
             return None
         filename = await parser.get_filename_from_metadata(download_url)
@@ -236,7 +243,7 @@ async def _get_file_url(callback_data: str, callback: CallbackQuery) -> FileUrl 
 
 
 async def _get_book_info(
-    book_id: int, previous_url: str | None = None
+    book_id: int, i18n: TranslatorRunner, previous_url: str | None = None
 ) -> schemas.BookInfoData | None:
     try:
         async with FlibustaParser() as parser:
