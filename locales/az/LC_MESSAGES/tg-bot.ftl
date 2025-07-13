@@ -1,4 +1,7 @@
 start-greeting = Salam! Mən kitabxanada kitab axtarışı üçün botam. Bir əməliyyat seçin
+start-choose-library = Kitabxana seçin
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg Layihəsi
 start-error-generic = Bağışlayın, bir xəta baş verdi. Zəhmət olmasa, sonra yenidən cəhd edin.
 start-enter-title = Kitabın adını daxil edin
 start-enter-author = Müəllifin adını daxil edin

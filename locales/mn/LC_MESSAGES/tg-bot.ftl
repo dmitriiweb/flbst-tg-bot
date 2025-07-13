@@ -1,4 +1,7 @@
 start-greeting = Сайн уу! Би номын сангаас ном хайх бот байна. Үйлдэл сонгоно уу
+start-choose-library = Номын сан сонгоно уу
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Гутенберг төсөл
 start-error-generic = Уучлаарай, алдаа гарлаа. Дараа дахин оролдоно уу.
 start-enter-title = Номын нэрийг оруулна уу
 start-enter-author = Зохиогчийн нэрийг оруулна уу

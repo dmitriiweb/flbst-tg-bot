@@ -1,4 +1,7 @@
 start-greeting = Hai! Saya adalah bot untuk mencari buku di perpustakaan. Pilih sebuah tindakan
+start-choose-library = Pilih perpustakaan
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Proyek Gutenberg
 start-error-generic = Maaf, terjadi kesalahan. Silakan coba lagi nanti.
 start-enter-title = Masukkan judul buku
 start-enter-author = Masukkan nama penulis

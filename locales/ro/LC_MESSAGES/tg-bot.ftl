@@ -1,4 +1,7 @@
 start-greeting = Bună! Sunt un bot pentru căutarea cărților în bibliotecă. Alegeți o acțiune
+start-choose-library = Alegeți o bibliotecă
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Proiectul Gutenberg
 start-error-generic = Ne pare rău, a apărut o eroare. Vă rugăm să încercați din nou mai târziu.
 start-enter-title = Introduceți titlul cărții
 start-enter-author = Introduceți numele autorului

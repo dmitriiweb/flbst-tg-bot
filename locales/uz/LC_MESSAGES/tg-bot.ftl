@@ -1,4 +1,7 @@
 start-greeting = Salom! Men kutubxonada kitob qidirish uchun botman. Harakatni tanlang
+start-choose-library = Kutubxonani tanlang
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg loyihasi
 start-error-generic = Kechirasiz, xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring.
 start-enter-title = Kitob nomini kiriting
 start-enter-author = Muallifning ismini kiriting

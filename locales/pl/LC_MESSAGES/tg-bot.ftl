@@ -1,4 +1,7 @@
 start-greeting = Cześć! Jestem botem do wyszukiwania książek w bibliotece. Wybierz akcję
+start-choose-library = Wybierz bibliotekę
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Projekt Gutenberg
 start-error-generic = Przepraszamy, wystąpił błąd. Spróbuj ponownie później.
 start-enter-title = Wprowadź tytuł książki
 start-enter-author = Wprowadź nazwisko autora

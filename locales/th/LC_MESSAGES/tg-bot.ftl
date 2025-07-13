@@ -1,4 +1,7 @@
 start-greeting = สวัสดี! ฉันเป็นบอทสำหรับค้นหาหนังสือในห้องสมุด เลือกการกระทำ
+start-choose-library = เลือกห้องสมุด
+start-choose-library-flibusta = ฟลิบุสต้า
+start-choose-library-gutenberg = โครงการกูเทนเบิร์ก
 start-error-generic = ขออภัย เกิดข้อผิดพลาด โปรดลองอีกครั้งในภายหลัง
 start-enter-title = ป้อนชื่อหนังสือ
 start-enter-author = ป้อนชื่อผู้แต่ง

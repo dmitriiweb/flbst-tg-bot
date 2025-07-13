@@ -1,4 +1,7 @@
 start-greeting = こんにちは！図書館で本を検索するためのボットです。アクションを選択してください
+start-choose-library = 図書館を選択してください
+start-choose-library-flibusta = フリブスタ
+start-choose-library-gutenberg = プロジェクト・グーテンベルク
 start-error-generic = 申し訳ありませんが、エラーが発生しました。後でもう一度お試しください。
 start-enter-title = 書名を入力してください
 start-enter-author = 著者名を入力してください

@@ -1,4 +1,7 @@
 start-greeting = नमस्ते! मैं पुस्तकालय में किताबें खोजने के लिए एक बॉट हूँ। एक क्रिया चुनें
+start-choose-library = एक पुस्तकालय चुनें
+start-choose-library-flibusta = फ़्लिबस्टा
+start-choose-library-gutenberg = प्रोजेक्ट गुटेनबर्ग
 start-error-generic = क्षमा करें, एक त्रुटि हुई। कृपया बाद में पुन: प्रयास करें।
 start-enter-title = पुस्तक का शीर्षक दर्ज करें
 start-enter-author = लेखक का नाम दर्ज करें

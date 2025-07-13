@@ -1,4 +1,7 @@
 start-greeting = 안녕하세요! 도서관에서 책을 검색하는 봇입니다. 작업을 선택하세요
+start-choose-library = 도서관을 선택하세요
+start-choose-library-flibusta = 플리버스타
+start-choose-library-gutenberg = 구텐베르크 프로젝트
 start-error-generic = 죄송합니다. 오류가 발생했습니다. 나중에 다시 시도하십시오.
 start-enter-title = 책 제목을 입력하세요
 start-enter-author = 저자 이름을 입력하세요

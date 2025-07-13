@@ -1,4 +1,7 @@
 start-greeting = مرحبًا! أنا روبوت للبحث عن الكتب في المكتبة. اختر إجراءً
+start-choose-library = اختر مكتبة
+start-choose-library-flibusta = فليبوستا
+start-choose-library-gutenberg = مشروع غوتنبرغ
 start-error-generic = عذرًا، حدث خطأ. يرجى المحاولة لاحقًا.
 start-enter-title = أدخل عنوان الكتاب
 start-enter-author = أدخل اسم المؤلف

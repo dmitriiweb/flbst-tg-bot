@@ -1,4 +1,7 @@
 start-greeting = Hei! Olen botti, joka etsii kirjoja kirjastosta. Valitse toiminto
+start-choose-library = Valitse kirjasto
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg-projekti
 start-error-generic = Pahoittelut, tapahtui virhe. Yritä myöhemmin uudelleen.
 start-enter-title = Anna kirjan nimi
 start-enter-author = Anna kirjailijan nimi

@@ -1,4 +1,7 @@
 start-greeting = Здравей! Аз съм бот за търсене на книги в библиотеката. Избери действие
+start-choose-library = Изберете библиотека
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Проект Гутенберг
 start-error-generic = Съжалявам, възникна грешка. Моля, опитайте по-късно.
 start-enter-title = Въведете заглавието на книгата
 start-enter-author = Въведете името на автора

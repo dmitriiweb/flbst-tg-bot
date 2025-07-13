@@ -1,4 +1,7 @@
 start-greeting = 你好！我是一个在图书馆里搜索书籍的机器人。请选择一个操作
+start-choose-library = 选择一个图书馆
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = 古腾堡计划
 start-error-generic = 抱歉，发生了错误。请稍后再试。
 start-enter-title = 输入书名
 start-enter-author = 输入作者姓名

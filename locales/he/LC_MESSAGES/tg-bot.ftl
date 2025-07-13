@@ -1,4 +1,7 @@
 start-greeting = שלום! אני בוט לחיפוש ספרים בספרייה. בחר פעולה
+start-choose-library = בחר ספרייה
+start-choose-library-flibusta = פליבוסטה
+start-choose-library-gutenberg = פרויקט גוטנברג
 start-error-generic = מצטערים, אירעה שגיאה. אנא נסה שוב מאוחר יותר.
 start-enter-title = הזן את שם הספר
 start-enter-author = הזן את שם הסופר

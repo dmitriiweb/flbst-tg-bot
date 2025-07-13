@@ -1,4 +1,7 @@
 start-greeting = Hi! I'm a bot for searching books in the library. Choose an action
+start-choose-library = Choose a library
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Project Gutenberg
 start-error-generic = Sorry, an error occurred. Please try again later.
 start-enter-title = Enter the book title
 start-enter-author = Enter the author's name

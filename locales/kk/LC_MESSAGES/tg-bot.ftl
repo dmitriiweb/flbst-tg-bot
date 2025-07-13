@@ -1,4 +1,7 @@
 start-greeting = Сәлем! Мен кітапханада кітаптарды іздеуге арналған ботпын. Әрекетті таңдаңыз
+start-choose-library = Кітапхананы таңдаңыз
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Гутенберг жобасы
 start-error-generic = Кешіріңіз, қате пайда болды. Кейінірек қайталап көріңіз.
 start-enter-title = Кітап атауын енгізіңіз
 start-enter-author = Автордың атын енгізіңіз

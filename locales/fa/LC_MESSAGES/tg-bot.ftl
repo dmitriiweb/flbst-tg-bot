@@ -1,4 +1,7 @@
 start-greeting = سلام! من یک ربات برای جستجوی کتاب‌ها در کتابخانه هستم. یک عمل را انتخاب کنید
+start-choose-library = یک کتابخانه انتخاب کنید
+start-choose-library-flibusta = فلیبوستا
+start-choose-library-gutenberg = پروژه گوتنبرگ
 start-error-generic = متاسفم، خطایی رخ داد. لطفاً بعداً دوباره تلاش کنید.
 start-enter-title = عنوان کتاب را وارد کنید
 start-enter-author = نام نویسنده را وارد کنید

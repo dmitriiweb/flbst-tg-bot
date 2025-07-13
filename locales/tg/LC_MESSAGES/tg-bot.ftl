@@ -1,4 +1,7 @@
 start-greeting = Салом! Ман бот барои ҷустуҷӯи китобҳо дар китобхона ҳастам. Амалро интихоб кунед
+start-choose-library = Китобхонаро интихоб кунед
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Лоиҳаи Гутенберг
 start-error-generic = Бубахшед, хатогӣ рух дод. Лутфан, баъдтар бори дигар кӯшиш кунед.
 start-enter-title = Номи китобро ворид кунед
 start-enter-author = Номи муаллифро ворид кунед

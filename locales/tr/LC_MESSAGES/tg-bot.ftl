@@ -1,4 +1,7 @@
 start-greeting = Merhaba! Kütüphanede kitap aramak için bir botum. Bir eylem seçin
+start-choose-library = Bir kütüphane seçin
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg Projesi
 start-error-generic = Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.
 start-enter-title = Kitap başlığını girin
 start-enter-author = Yazarın adını girin
