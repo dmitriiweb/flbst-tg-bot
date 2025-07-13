@@ -1,7 +1,9 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-def choose_download_format_keyboard(download_urls: list[str], download_button_text: str) -> InlineKeyboardMarkup:
+def choose_download_format_keyboard(
+    download_urls: list[str], download_button_text: str
+) -> InlineKeyboardMarkup:
     buttons = []
     for download_url in download_urls:
         file_format = download_url.split("/")[-1].lower()

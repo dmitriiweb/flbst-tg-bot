@@ -1,5 +1,5 @@
-from fluentogram import FluentTranslator, TranslatorHub
-from fluentogram.translator import FluentBundle
+from fluentogram import FluentTranslator, TranslatorHub  # type: ignore
+from fluentogram.translator import FluentBundle  # type: ignore
 
 from flibusta_bot import config
 

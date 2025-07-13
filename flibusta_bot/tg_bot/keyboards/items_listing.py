@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from typing import Protocol
 
 from aiogram.types import InlineKeyboardButton
-from aiogramx import Paginator
+from aiogramx import Paginator  # type: ignore
 
 from flibusta_bot.tg_bot.bot import dp
 

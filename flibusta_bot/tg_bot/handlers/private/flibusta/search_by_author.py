@@ -6,7 +6,7 @@ from aiogram.types import (
     CallbackQuery,
     Message,
 )
-from fluentogram import TranslatorRunner
+from fluentogram import TranslatorRunner  # type: ignore
 from loguru import logger
 
 from flibusta_bot import config
@@ -21,7 +21,9 @@ router.message.middleware(TranslatorRunnerMiddleware())
 router.callback_query.middleware(TranslatorRunnerMiddleware())
 
 
-@router.message(StateFilter(bot_states.SearchByAuthorStates.search_by_author), F.text)
+@router.message(
+    StateFilter(bot_states.FlibustaSearchByAuthorStates.search_by_author), F.text
+)
 async def search_author(
     message: Message, state: FSMContext, i18n: TranslatorRunner, **data
 ):
@@ -46,7 +48,7 @@ async def search_author(
             i18n.search.by.author.found.authors(total_authors=len(authors)),
             reply_markup=kb,
         )
-        await state.set_state(bot_states.SearchByAuthorStates.choose_book)
+        await state.set_state(bot_states.FlibustaSearchByAuthorStates.choose_book)
 
     except Exception as e:
         logger.error(f"search_author error: {e}")
@@ -57,7 +59,7 @@ async def search_author(
 
 
 @router.callback_query(
-    StateFilter(bot_states.SearchByAuthorStates.choose_book),
+    StateFilter(bot_states.FlibustaSearchByAuthorStates.choose_book),
     F.data.startswith("author|"),
 )
 async def choose_book(
@@ -73,7 +75,7 @@ async def choose_book(
                 chat_id=message.chat.id, action=ChatAction.TYPING
             )
         if not getattr(message, "text", None):
-            await message.answer(i18n.search.by.author.empty.query())  # type: ignore
+            await message.answer(i18n.search.by.author.empty.query())  # type: ignore[attr-defined]
             return
         author_id = callback.data.split("|")[1] if callback.data else ""  # type: ignore
         author_url = f"{base_url}/a/{author_id}"
@@ -82,17 +84,17 @@ async def choose_book(
             _, books = await parser.search_books_by_author(author_url)
 
         if not books:
-            await message.answer(i18n.search.by.author.not_.found.books())  # type: ignore
+            await message.answer(i18n.search.by.author.not_.found.books())  # type: ignore[attr-defined]
             return
 
         total_books = len(books)
         paginator = item_listing_kb(books, callback_prefix="book")
         kb = await paginator.render_kb()
-        await state.set_state(bot_states.SearchByTitleStates.book_selected)
-        await message.edit_text(
+        await state.set_state(bot_states.FlibustaSearchByTitleStates.book_selected)
+        await message.edit_text(  # type: ignore[attr-defined,union-attr]
             i18n.search.by.author.found.books(total_books=total_books),
             reply_markup=kb,
-        )  # type: ignore
+        )
     except Exception as e:
         logger.error(f"search_books error: {e}")
         try:
