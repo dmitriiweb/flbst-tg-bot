@@ -6,8 +6,8 @@ from fluentogram import TranslatorRunner  # type: ignore
 
 from flibusta_bot.tg_bot import states as bot_states
 from flibusta_bot.tg_bot.filters.i18n_filter import I18nFilter
-from flibusta_bot.tg_bot.keyboards import cancels as cancels_keyboard
-from flibusta_bot.tg_bot.keyboards.one_column_listing import one_column_listing
+from flibusta_bot.tg_bot.keyboards.flibusta import cancels as cancels_keyboard
+from flibusta_bot.tg_bot.keyboards.flibusta import one_column_listing
 from flibusta_bot.tg_bot.middlewares.i118n import TranslatorRunnerMiddleware
 
 router = Router()

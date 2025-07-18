@@ -16,14 +16,14 @@ from fluentogram import TranslatorRunner  # type: ignore
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.flibusta_parser import App as FlibustaParser
-from flibusta_bot.flibusta_parser import schemas
+from flibusta_bot.parsers import App as FlibustaParser
+from flibusta_bot.parsers import schemas
 from flibusta_bot.tg_bot import states as bot_states
-from flibusta_bot.tg_bot.keyboards import (
+from flibusta_bot.tg_bot.keyboards.flibusta import (
     choose_download_format_keyboard,
     item_listing_kb,
+    one_column_listing,
 )
-from flibusta_bot.tg_bot.keyboards.one_column_listing import one_column_listing
 from flibusta_bot.tg_bot.middlewares.i118n import TranslatorRunnerMiddleware
 
 router = Router()

@@ -10,9 +10,9 @@ from fluentogram import TranslatorRunner  # type: ignore
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.flibusta_parser import App as FlibustaParser
+from flibusta_bot.parsers import App as FlibustaParser
 from flibusta_bot.tg_bot import states as bot_states
-from flibusta_bot.tg_bot.keyboards import item_listing_kb
+from flibusta_bot.tg_bot.keyboards.flibusta import item_listing_kb
 from flibusta_bot.tg_bot.middlewares.i118n import TranslatorRunnerMiddleware
 
 router = Router()
