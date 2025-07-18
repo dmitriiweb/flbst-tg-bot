@@ -45,3 +45,4 @@ search-by-author-found-books =
        *[other] { $total_books } books found
     }
 search-by-author-error-generic = Sorry, an error occurred. Please try again later.
+gutetenberg-call-to-action = Input search query
