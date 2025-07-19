@@ -33,11 +33,14 @@ class BaseHttpClient:
         await self.client.aclose()
 
     async def make_request(
-        self, url: str, headers: dict[str, Any] | None = None
+        self,
+        url: str,
+        headers: dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
     ) -> schemas.HttpResponse | None:
         headers = headers or self.default_headers
         try:
-            response = await self.client.get(url, headers=headers)
+            response = await self.client.get(url, headers=headers, params=params)
         except Exception:
             logger.error(f"Error while making request: {url=}")
             return None

@@ -1,3 +1,3 @@
-from . import flibusta
+from . import flibusta, gutenberg
 
-__all__ = ["flibusta"]
+__all__ = ["flibusta", "gutenberg"]

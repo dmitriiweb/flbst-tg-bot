@@ -46,3 +46,6 @@ search-by-author-found-books =
     }
 search-by-author-error-generic = Sorry, an error occurred. Please try again later.
 gutetenberg-call-to-action = Input search query
+gutenberg-listing-previous = 👈 Previous
+gutenberg-listing-next = 👉 Next
+gutenberg-listing-book-title = Search results for "{ $query }"

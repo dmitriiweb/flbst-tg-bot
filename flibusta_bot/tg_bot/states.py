@@ -11,3 +11,7 @@ class FlibustaSearchByTitleStates(StatesGroup):
 class FlibustaSearchByAuthorStates(StatesGroup):
     search_by_author = State()
     choose_book = State()
+
+
+class GutenbergStartStates(StatesGroup):
+    search_query = State()

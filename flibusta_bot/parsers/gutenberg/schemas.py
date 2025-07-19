@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from urllib.parse import urlparse
 
 from ..schemas import Serializable
+
 
 @dataclass
 class BookListingData(Serializable):
     title: str
     author: str
     url: str
+
+    @property
+    def book_id(self) -> str:
+        return self.url.split("/")[-1]
 
 
 @dataclass
