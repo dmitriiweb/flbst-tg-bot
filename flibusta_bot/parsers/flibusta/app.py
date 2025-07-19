@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import re
 
-from flibusta_bot.parsers import schemas
-
-from . import html_parser
+from .. import schemas as parent_schemas
+from . import html_parser, schemas
 from .http_client import HttpClient
 
 UrlPages = list[str]
@@ -78,10 +77,12 @@ class App:
         url_split = url.split("/")
         book_id = url_split[-2]
         book_format = url_split[-1]
+        if book_format not in ("epub", "fb2", "mobi"):
+            return None
         result = await self.http_client.get_download_book_url(book_id, book_format)
         return result
 
-    async def download_book(self, url: str) -> schemas.BinaryHttpResponse | None:
+    async def download_book(self, url: str) -> parent_schemas.BinaryHttpResponse | None:
         response = await self.http_client.download_book(url)
         if not response:
             return None

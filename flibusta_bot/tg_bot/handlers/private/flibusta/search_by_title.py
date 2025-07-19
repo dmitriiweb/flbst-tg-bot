@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 
@@ -16,8 +18,8 @@ from fluentogram import TranslatorRunner  # type: ignore
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.parsers import App as FlibustaParser
-from flibusta_bot.parsers import schemas
+from flibusta_bot.parsers.flibusta import schemas
+from flibusta_bot.parsers.flibusta.app import App as FlibustaParser
 from flibusta_bot.tg_bot import states as bot_states
 from flibusta_bot.tg_bot.keyboards.flibusta import (
     choose_download_format_keyboard,

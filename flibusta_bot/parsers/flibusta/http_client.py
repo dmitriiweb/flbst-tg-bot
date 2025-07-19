@@ -7,7 +7,7 @@ from loguru import logger
 from flibusta_bot import config
 from flibusta_bot.parsers.base_http_client import BaseHttpClient
 
-from .. import http_client_schemas as schemas
+from .. import schemas
 
 
 class HttpClient(BaseHttpClient):
