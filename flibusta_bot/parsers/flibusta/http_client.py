@@ -5,8 +5,9 @@ from typing import Any, Literal
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.parsers import schemas
 from flibusta_bot.parsers.base_http_client import BaseHttpClient
+
+from .. import http_client_schemas as schemas
 
 
 class HttpClient(BaseHttpClient):

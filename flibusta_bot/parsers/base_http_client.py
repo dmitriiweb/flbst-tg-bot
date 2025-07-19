@@ -33,8 +33,9 @@ class BaseHttpClient:
         await self.client.aclose()
 
     async def make_request(
-        self, url: str, headers: dict[str, Any]
+        self, url: str, headers: dict[str, Any] | None = None
     ) -> schemas.HttpResponse | None:
+        headers = headers or self.default_headers
         try:
             response = await self.client.get(url, headers=headers)
         except Exception:
