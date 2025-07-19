@@ -2,66 +2,22 @@
 import io
 from typing import Any, Literal
 
-import httpx
 from loguru import logger
 
 from flibusta_bot import config
+from flibusta_bot.parsers import schemas
+from flibusta_bot.parsers.base_http_client import BaseHttpClient
 
-from . import schemas
 
-
-class HttpClient:
-    default_headers = {
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "en-US,en;q=0.9,ru;q=0.8",
-        "dnt": "1",
-        "priority": "u=0, i",
-        "sec-ch-ua": '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Linux"',
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "same-origin",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
-    }
-
-    def __init__(self, base_url: str | None = None):
-        self.base_url = base_url or config.LIBRARY_BASE_URL.rstrip("/") + "/"
-        self.client = httpx.AsyncClient(follow_redirects=True, timeout=600)
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.client.aclose()
-
-    async def _make_request(
-        self, path: str, headers: dict[str, Any]
-    ) -> schemas.HttpResponse | None:
-        url = f"{self.base_url}{path}"
-        try:
-            response = await self.client.get(url, headers=headers)
-        except Exception:
-            logger.error(f"Error while making request: {url=}")
-            return None
-        if response.status_code != 200:
-            logger.error(f"Error while making request: {response.status_code} | {url=}")
-            return None
-        return schemas.HttpResponse(
-            status_code=response.status_code,
-            content=response.text,
-            headers=dict(response.headers),
-            url=url,
-        )
+class HttpClient(BaseHttpClient):
+    base_url = config.LIBRARY_BASE_URL.rstrip("/") + "/"
 
     async def search_books(self, query: str) -> schemas.HttpResponse | None:
         query = query.replace(" ", "+")
         path = f"booksearch?ask={query}"
         headers = self.default_headers.copy()
         headers["referer"] = self.base_url
-        return await self._make_request(path, headers=headers)
+        return await self.make_request(f"{self.base_url}{path}", headers=headers)
 
     async def get_book_info(
         self, book_id: str, previous_url: str
@@ -69,7 +25,7 @@ class HttpClient:
         path = f"b/{book_id}"
         headers = self.default_headers.copy()
         headers["referer"] = f"{previous_url}"
-        return await self._make_request(path, headers=headers)
+        return await self.make_request(f"{self.base_url}{path}", headers=headers)
 
     async def download_book(
         self, download_url: str
@@ -141,4 +97,4 @@ class HttpClient:
                 path = author_url
         else:
             path = author_url.lstrip("/")
-        return await self._make_request(path, headers=headers)
+        return await self.make_request(f"{self.base_url}{path}", headers=headers)

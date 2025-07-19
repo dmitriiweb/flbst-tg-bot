@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import re
 
-from . import html_parser, schemas
+from flibusta_bot.parsers import schemas
+
+from . import html_parser
 from .http_client import HttpClient
 
 UrlPages = list[str]

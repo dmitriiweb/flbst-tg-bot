@@ -4,8 +4,7 @@ import lxml.html as lh
 from loguru import logger
 
 from flibusta_bot import config
-
-from . import schemas
+from flibusta_bot.parsers import schemas
 
 
 def get_all_pages_in_listing(html: str, first_url: str) -> list[str]:
