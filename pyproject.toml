@@ -20,3 +20,8 @@ dev = [
     "mypy>=1.15.0",
     "ruff>=0.11.10",
 ]
+
+[dependency-groups]
+dev = [
+    "lxml-stubs>=0.5.1",
+]
