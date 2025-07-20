@@ -4,6 +4,7 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, URLInputFile
 from fluentogram import TranslatorRunner  # type: ignore
+from loguru import logger
 
 from flibusta_bot.parsers.gutenberg.app import App as GutenbergParser
 from flibusta_bot.tg_bot.filters.i18n_filter import I18nFilter
@@ -88,6 +89,7 @@ async def book_info(
     answer = f"{book_info.title}\n\n{book_info.author}\n\n{book_info.description}"[
         :4096
     ]
+    logger.info(f"Book info: {book_info}")
     kb = kbs.download_formats_kb(book_info.download_urls, i18n)
     await state.update_data(book_id=book_id)
     await state.update_data(book_title=book_info.title)
@@ -109,6 +111,9 @@ async def download_book(
     state_data = await state.get_data()
     book_id = state_data.get("book_id")
     book_title = state_data.get("book_title")
+    logger.info(
+        f"Book id: {book_id}, Book title: {book_title}, Download format: {download_format}"
+    )
 
     if not book_id or not book_title:
         return
