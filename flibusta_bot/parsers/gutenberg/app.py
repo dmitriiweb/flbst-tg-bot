@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from flibusta_bot.parsers.gutenberg import html_parser
+from flibusta_bot.parsers.schemas import BinaryHttpResponse
 
 from . import schemas
 from .http_client import HttpClient
@@ -47,7 +48,7 @@ class App:
 
     async def download_book(
         self, book_id: str, download_format: str
-    ) -> schemas.BinaryHttpResponse | None:
+    ) -> BinaryHttpResponse | None:
         url = self.get_download_url(book_id, download_format)
         response = await self.http_client.download_book_by_url(url)
         if not response:

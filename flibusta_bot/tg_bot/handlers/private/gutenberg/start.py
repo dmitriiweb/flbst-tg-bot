@@ -4,7 +4,6 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, URLInputFile
 from fluentogram import TranslatorRunner  # type: ignore
-from loguru import logger
 
 from flibusta_bot.parsers.gutenberg.app import App as GutenbergParser
 from flibusta_bot.tg_bot.filters.i18n_filter import I18nFilter
@@ -33,6 +32,9 @@ async def choose_library_gutenberg(
 async def search_query(
     message: Message, state: FSMContext, i18n: TranslatorRunner, **data
 ):
+    if not message.text:
+        return
+
     async with GutenbergParser() as parser:
         books, next_index, prev_index = await parser.search_books(message.text)
     kb = kbs.book_listing_kb(books, prev_index, next_index, i18n)
@@ -48,17 +50,25 @@ async def search_query(
 async def listing_navigation(
     callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
 ):
+    if not callback.data:
+        return
+
     start_index = callback.data.split("|")[-1]
     state_data = await state.get_data()
     user_query = state_data.get("user_query")
+
+    if not user_query:
+        return
+
     async with GutenbergParser() as parser:
         books, next_index, prev_index = await parser.search_books(
             user_query, start_index
         )
     kb = kbs.book_listing_kb(books, prev_index, next_index, i18n)
-    await callback.message.answer(
-        i18n.gutenberg.listing.book.title(query=user_query), reply_markup=kb
-    )
+    if callback.message:
+        await callback.message.answer(
+            i18n.gutenberg.listing.book.title(query=user_query), reply_markup=kb
+        )
 
 
 @router.callback_query(
@@ -67,6 +77,9 @@ async def listing_navigation(
 async def book_info(
     callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
 ):
+    if not callback.data:
+        return
+
     book_id = callback.data.split("|")[-1]
     async with GutenbergParser() as parser:
         book_info = await parser.get_book_info(book_id)
@@ -78,7 +91,8 @@ async def book_info(
     kb = kbs.download_formats_kb(book_info.download_urls, i18n)
     await state.update_data(book_id=book_id)
     await state.update_data(book_title=book_info.title)
-    await callback.message.answer(answer, reply_markup=kb)
+    if callback.message:
+        await callback.message.answer(answer, reply_markup=kb)
     await state.set_state(GutenbergStartStates.download_book)
 
 
@@ -88,10 +102,17 @@ async def book_info(
 async def download_book(
     callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
 ):
+    if not callback.data:
+        return
+
     download_format = callback.data.split("|")[-1]
     state_data = await state.get_data()
     book_id = state_data.get("book_id")
     book_title = state_data.get("book_title")
+
+    if not book_id or not book_title:
+        return
+
     await callback.answer(i18n.search.by.title.download.started())
     async with GutenbergParser() as parser:
         book = await parser.download_book(book_id, download_format)
@@ -106,5 +127,6 @@ async def download_book(
         i18n.start.choose.library.flibusta(),
         i18n.start.choose.library.gutenberg(),
     )
-    await callback.message.answer_document(document=doc, reply_markup=kb)
+    if callback.message:
+        await callback.message.answer_document(document=doc, reply_markup=kb)
     await state.clear()

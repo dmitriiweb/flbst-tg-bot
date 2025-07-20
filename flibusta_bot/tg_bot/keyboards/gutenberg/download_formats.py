@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from fluentogram import TranslatorRunner
+from fluentogram import TranslatorRunner  # type: ignore
 
 from flibusta_bot.parsers.gutenberg import schemas
 

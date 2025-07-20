@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import io
 from typing import Any, Literal
 
 from loguru import logger
