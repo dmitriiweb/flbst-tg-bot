@@ -43,4 +43,4 @@ class DownloadUrlData(Serializable):
         raw_filename = self.url.split("/")[-1]
         if raw_filename.endswith(".zip"):
             return "zip"
-        return ".".join(raw_filename.split(".")[1:-1])
+        return ".".join(raw_filename.split(".")[1:])

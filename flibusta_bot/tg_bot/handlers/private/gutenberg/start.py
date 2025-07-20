@@ -76,6 +76,19 @@ async def book_info(
     answer = f"{book_info.title}\n\n{book_info.author}\n\n{book_info.description}"[
         :4096
     ]
-    kb = kbs.download_formats_kb(book_info.download_urls)
+    kb = kbs.download_formats_kb(book_info.download_urls, i18n)
+    await state.update_data(book_id=book_id)
     await callback.message.answer(answer, reply_markup=kb)
     await state.set_state(GutenbergStartStates.download_book)
+
+@router.callback_query(
+    StateFilter(GutenbergStartStates.download_book), F.data.startswith("gdb")
+)
+async def download_book(
+    callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
+):
+    download_format = callback.data.split("|")[-1]
+    state_data = await state.get_data()
+    book_id = state_data.get("book_id")
+    logger.debug(f"{download_format=}, {book_id=}")
+    await callback.message.answer("downloading...")

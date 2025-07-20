@@ -63,7 +63,7 @@ async def cancel_callback(callback: CallbackQuery, state: FSMContext, **data):
     await callback.message.answer(
         i18n.start.choose.action(),
         reply_markup=start_keyboard(
-            i18n.start.search.by.title.button(),
-            i18n.start.search.by.author.button(),
+            i18n.start.choose.library.flibusta(),
+            i18n.start.choose.library.gutenberg(),
         ),
     )
