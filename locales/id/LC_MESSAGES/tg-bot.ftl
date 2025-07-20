@@ -49,3 +49,7 @@ search-by-author-found-books =
        *[other] { $total_books } buku ditemukan
     }
 search-by-author-error-generic = Maaf, terjadi kesalahan. Silakan coba lagi nanti.
+gutetenberg-call-to-action = Masukkan kueri pencarian
+gutenberg-listing-previous = 👈 Sebelumnya
+gutenberg-listing-next = 👉 Berikutnya
+gutenberg-listing-book-title = Hasil pencarian untuk "{ $query }"

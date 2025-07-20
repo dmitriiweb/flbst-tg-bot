@@ -30,3 +30,7 @@ search-by-title-back = 返回
 search-by-title-cancel = 取消
 search-by-title-download-button-with_-format = 下載 { $format }
 search-by-title-download-button = 下載
+gutetenberg-call-to-action = 輸入搜尋查詢
+gutenberg-listing-previous = 👈 上一頁
+gutenberg-listing-next = 👉 下一頁
+gutenberg-listing-book-title = 「{ $query }」的搜尋結果

@@ -49,3 +49,7 @@ search-by-author-found-books =
        *[other] { $total_books } livres trouvés
     }
 search-by-author-error-generic = Désolé, une erreur est survenue. Veuillez réessayer plus tard.
+gutetenberg-call-to-action = Saisir la requête de recherche
+gutenberg-listing-previous = 👈 Précédent
+gutenberg-listing-next = 👉 Suivant
+gutenberg-listing-book-title = Résultats de recherche pour "{ $query }"

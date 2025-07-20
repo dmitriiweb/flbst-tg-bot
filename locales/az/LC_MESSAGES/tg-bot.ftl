@@ -11,7 +11,9 @@ start-search-by-author-button = 👤 Müəllifə görə axtarış
 cancel-button = ❌ Ləğv et
 
 search-by-title-empty-query = Sorğu boşdur.
-search-by-title-not_-found-title = Təəssüf ki, heç bir kitab tapılmadı.\n\nBaşqa bir sorğu ilə yenidən cəhd edin və ya Ləğv et düyməsini basın
+search-by-title-not_-found-title = Təəssüf ki, heç bir kitab tapılmadı.
+
+Başqa bir sorğu ilə yenidən cəhd edin və ya Ləğv et düyməsini basın
 search-by-title-found-books =
     { $total_books ->
         [one] Bir kitab tapıldı
@@ -28,7 +30,9 @@ search-by-title-download-button-with_-format = Yüklə { $format }
 search-by-title-download-button = Yüklə
 
 search-by-author-empty-query = Sorğu boşdur.
-search-by-author-not_-found-author = Təəssüf ki, heç bir müəllif tapılmadı.\n\nBaşqa bir sorğu ilə yenidən cəhd edin və ya Ləğv et düyməsini basın
+search-by-author-not_-found-author = Təəssüf ki, heç bir müəllif tapılmadı.
+
+Başqa bir sorğu ilə yenidən cəhd edin və ya Ləğv et düyməsini basın
 search-by-author-found-authors =
     { $total_authors ->
         [one] Bir müəllif tapıldı
@@ -44,4 +48,9 @@ search-by-author-found-books =
         [many] { $total_books } kitab tapıldı
        *[other] { $total_books } kitab tapıldı
     }
-search-by-author-error-generic = Bağışlayın, bir xəta baş verdi. Zəhmət olmasa, sonra yenidən cəhd edin. 
+search-by-author-error-generic = Bağışlayın, bir xəta baş verdi. Zəhmət olmasa, sonra yenidən cəhd edin.
+gutetenberg-call-to-action = Axtarış sorğusunu daxil edin
+gutenberg-listing-previous = 👈 Əvvəlki
+gutenberg-listing-next = 👉 Növbəti
+gutenberg-listing-book-title = "{ $query }" üçün axtarış nəticələri
+ 

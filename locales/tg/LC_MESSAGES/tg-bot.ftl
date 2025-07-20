@@ -30,3 +30,7 @@ search-by-title-back = Бозгашт
 search-by-title-cancel = Бекор кардан
 search-by-title-download-button-with_-format = Боргирӣ { $format }
 search-by-title-download-button = Боргирӣ
+gutetenberg-call-to-action = Дархости ҷустуҷӯро ворид кунед
+gutenberg-listing-previous = 👈 Пешина
+gutenberg-listing-next = 👉 Оянда
+gutenberg-listing-book-title = Натиҷаҳои ҷустуҷӯ барои "{ $query }"

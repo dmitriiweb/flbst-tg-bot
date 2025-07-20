@@ -30,3 +30,7 @@ search-by-title-back = Назад
 search-by-title-cancel = Скасувати
 search-by-title-download-button-with_-format = Завантажити { $format }
 search-by-title-download-button = Завантажити
+gutetenberg-call-to-action = Введіть пошуковий запит
+gutenberg-listing-previous = 👈 Попередня
+gutenberg-listing-next = 👉 Наступна
+gutenberg-listing-book-title = Результати пошуку для "{ $query }"

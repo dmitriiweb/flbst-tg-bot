@@ -30,3 +30,7 @@ search-by-title-back = Voltar
 search-by-title-cancel = Cancelar
 search-by-title-download-button-with_-format = Baixar { $format }
 search-by-title-download-button = Baixar
+gutetenberg-call-to-action = Inserir consulta de pesquisa
+gutenberg-listing-previous = 👈 Anterior
+gutenberg-listing-next = 👉 Próximo
+gutenberg-listing-book-title = Resultados da pesquisa para "{ $query }"

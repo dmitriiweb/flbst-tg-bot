@@ -30,3 +30,7 @@ search-by-title-back = Orqaga
 search-by-title-cancel = Bekor qilish
 search-by-title-download-button-with_-format = { $format } yuklab olish
 search-by-title-download-button = Yuklab olish
+gutetenberg-call-to-action = Qidiruv so'rovini kiriting
+gutenberg-listing-previous = 👈 Oldingi
+gutenberg-listing-next = 👉 Keyingi
+gutenberg-listing-book-title = "{ $query }" uchun qidiruv natijalari

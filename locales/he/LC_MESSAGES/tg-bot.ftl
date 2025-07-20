@@ -49,3 +49,7 @@ search-by-author-found-books =
        *[other] נמצאו { $total_books } ספרים
     }
 search-by-author-error-generic = מצטערים, אירעה שגיאה. אנא נסה שוב מאוחר יותר.
+gutetenberg-call-to-action = הזן שאילתת חיפוש
+gutenberg-listing-previous = 👉 הקודם
+gutenberg-listing-next = 👈 הבא
+gutenberg-listing-book-title = תוצאות חיפוש עבור "{ $query }"

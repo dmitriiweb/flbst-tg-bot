@@ -45,3 +45,8 @@ search-by-author-found-books =
        *[other] Найдено { $total_books } книг
     }
 search-by-author-error-generic = Извините, произошла ошибка. Попробуйте позже.
+gutetenberg-call-to-action = Введите поисковый запрос
+gutenberg-listing-previous = 👈 Предыдущая
+gutenberg-listing-next = 👉 Следующая
+gutenberg-listing-book-title = Результаты поиска по запросу "{ $query }"
+

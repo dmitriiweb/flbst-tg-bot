@@ -11,7 +11,9 @@ start-search-by-author-button = 👤 جستجو بر اساس نویسنده
 cancel-button = ❌ لغو
 
 search-by-title-empty-query = درخواست خالی است.
-search-by-title-not_-found-title = متاسفانه هیچ کتابی پیدا نشد.\n\nبا یک درخواست دیگر تلاش کنید یا دکمه لغو را فشار دهید
+search-by-title-not_-found-title = متاسفانه هیچ کتابی پیدا نشد.
+
+با یک درخواست دیگر تلاش کنید یا دکمه لغو را فشار دهید
 search-by-title-found-books =
     { $total_books ->
         [one] یک کتاب پیدا شد
@@ -28,7 +30,9 @@ search-by-title-download-button-with_-format = دانلود { $format }
 search-by-title-download-button = دانلود
 
 search-by-author-empty-query = درخواست خالی است.
-search-by-author-not_-found-author = متاسفانه هیچ نویسنده‌ای پیدا نشد.\n\nبا یک درخواست دیگر تلاش کنید یا دکمه لغو را فشار دهید
+search-by-author-not_-found-author = متاسفانه هیچ نویسنده‌ای پیدا نشد.
+
+با یک درخواست دیگر تلاش کنید یا دکمه لغو را فشار دهید
 search-by-author-found-authors =
     { $total_authors ->
         [one] یک نویسنده پیدا شد
@@ -44,4 +48,9 @@ search-by-author-found-books =
         [many] { $total_books } کتاب پیدا شد
        *[other] { $total_books } کتاب پیدا شد
     }
-search-by-author-error-generic = متاسفم، خطایی رخ داد. لطفاً بعداً دوباره تلاش کنید. 
+search-by-author-error-generic = متاسفم، خطایی رخ داد. لطفاً بعداً دوباره تلاش کنید.
+gutetenberg-call-to-action = عبارت جستجو را وارد کنید
+gutenberg-listing-previous = 👈 قبلی
+gutenberg-listing-next = 👉 بعدی
+gutenberg-listing-book-title = نتایج جستجو برای "{ $query }"
+ 

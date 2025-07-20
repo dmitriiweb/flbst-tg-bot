@@ -30,3 +30,7 @@ search-by-title-back = Înapoi
 search-by-title-cancel = Anulare
 search-by-title-download-button-with_-format = Descărcați { $format }
 search-by-title-download-button = Descărcați
+gutetenberg-call-to-action = Introduceți interogarea de căutare
+gutenberg-listing-previous = 👈 Precedent
+gutenberg-listing-next = 👉 Următorul
+gutenberg-listing-book-title = Rezultatele căutării pentru "{ $query }"

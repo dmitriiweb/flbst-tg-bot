@@ -30,3 +30,7 @@ search-by-title-back = Geri
 search-by-title-cancel = İptal
 search-by-title-download-button-with_-format = { $format } indir
 search-by-title-download-button = İndir
+gutetenberg-call-to-action = Arama sorgusunu girin
+gutenberg-listing-previous = 👈 Önceki
+gutenberg-listing-next = 👉 Sonraki
+gutenberg-listing-book-title = "{ $query }" için arama sonuçları

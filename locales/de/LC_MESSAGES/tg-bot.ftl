@@ -11,7 +11,9 @@ start-search-by-author-button = 👤 Nach Autor suchen
 cancel-button = ❌ Abbrechen
 
 search-by-title-empty-query = Leere Anfrage.
-search-by-title-not_-found-title = Leider wurde kein Buch gefunden.\n\nVersuche es mit einer anderen Anfrage oder klicke auf Abbrechen
+search-by-title-not_-found-title = Leider wurde kein Buch gefunden.
+
+Versuche es mit einer anderen Anfrage oder klicke auf Abbrechen
 search-by-title-found-books =
     { $total_books ->
         [one] Ein Buch gefunden
@@ -28,7 +30,9 @@ search-by-title-download-button-with_-format = { $format } herunterladen
 search-by-title-download-button = Herunterladen
 
 search-by-author-empty-query = Leere Anfrage.
-search-by-author-not_-found-author = Leider wurde kein Autor gefunden.\n\nVersuche es mit einer anderen Anfrage oder klicke auf Abbrechen
+search-by-author-not_-found-author = Leider wurde kein Autor gefunden.
+
+Versuche es mit einer anderen Anfrage oder klicke auf Abbrechen
 search-by-author-found-authors =
     { $total_authors ->
         [one] Ein Autor gefunden
@@ -44,4 +48,9 @@ search-by-author-found-books =
         [many] { $total_books } Bücher gefunden
        *[other] { $total_books } Bücher gefunden
     }
-search-by-author-error-generic = Entschuldigung, ein Fehler ist aufgetreten. Bitte versuche es später erneut. 
+search-by-author-error-generic = Entschuldigung, ein Fehler ist aufgetreten. Bitte versuche es später erneut.
+gutetenberg-call-to-action = Suchanfrage eingeben
+gutenberg-listing-previous = 👈 Zurück
+gutenberg-listing-next = 👉 Weiter
+gutenberg-listing-book-title = Suchergebnisse für "{ $query }"
+ 

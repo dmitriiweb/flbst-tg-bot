@@ -30,3 +30,7 @@ search-by-title-back = Буцах
 search-by-title-cancel = Цуцлах
 search-by-title-download-button-with_-format = { $format } татах
 search-by-title-download-button = Татах
+gutetenberg-call-to-action = Хайлтын асуулга оруулна уу
+gutenberg-listing-previous = 👈 Өмнөх
+gutenberg-listing-next = 👉 Дараагийн
+gutenberg-listing-book-title = "{ $query }"-н хайлтын үр дүн

@@ -30,3 +30,7 @@ search-by-title-back = กลับ
 search-by-title-cancel = ยกเลิก
 search-by-title-download-button-with_-format = ดาวน์โหลด { $format }
 search-by-title-download-button = ดาวน์โหลด
+gutetenberg-call-to-action = ป้อนคำค้นหา
+gutenberg-listing-previous = 👈 ก่อนหน้า
+gutenberg-listing-next = 👉 ถัดไป
+gutenberg-listing-book-title = ผลการค้นหาสำหรับ "{ $query }"

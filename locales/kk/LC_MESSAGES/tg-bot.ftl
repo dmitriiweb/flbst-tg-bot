@@ -49,3 +49,7 @@ search-by-author-found-books =
        *[other] { $total_books } кітап табылды
     }
 search-by-author-error-generic = Кешіріңіз, қате пайда болды. Кейінірек қайталап көріңіз.
+gutetenberg-call-to-action = Іздеу сұрауын енгізіңіз
+gutenberg-listing-previous = 👈 Алдыңғы
+gutenberg-listing-next = 👉 Келесі
+gutenberg-listing-book-title = "{ $query }" үшін іздеу нәтижелері
