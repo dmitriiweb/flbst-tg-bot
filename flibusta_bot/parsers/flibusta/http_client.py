@@ -31,7 +31,7 @@ class HttpClient(BaseHttpClient):
     async def download_book(
         self, download_url: str
     ) -> schemas.BinaryHttpResponse | None:
-        book = await self._download_book(download_url)
+        book = await self.download_book_by_url(download_url)
         return book
 
     async def get_download_book_url(
@@ -49,24 +49,6 @@ class HttpClient(BaseHttpClient):
             logger.error(f"Error while getting download URL: {e} | {url=}")
             return None
         return str(response.url)
-
-    async def _download_book(self, url: str) -> schemas.BinaryHttpResponse | None:
-        try:
-            response = await self.client.get(url, headers=self.default_headers)
-            if response.status_code != 200:
-                logger.error(
-                    f"Error while downloading book: {response.status_code} | {url=}"
-                )
-                return None
-            return schemas.BinaryHttpResponse(
-                status_code=response.status_code,
-                content=io.BytesIO(response.content),
-                headers=dict(response.headers),
-                url=url,
-            )
-        except Exception as e:
-            logger.error(f"Error while downloading book: {e} | {url=}")
-            return None
 
     async def get_file_metadata(self, url: str) -> dict[str, Any] | None:
         try:

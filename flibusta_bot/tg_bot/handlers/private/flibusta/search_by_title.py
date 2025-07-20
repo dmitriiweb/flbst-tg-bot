@@ -207,8 +207,8 @@ async def download_book(
         await callback.answer(i18n.search.by.title.download.started())
         doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
         kb = one_column_listing(
-            i18n.start.search.by.title.button(),
-            i18n.start.search.by.author.button(),
+            i18n.start.choose.library.flibusta(),
+            i18n.start.choose.library.gutenberg(),
         )
         if callback.message is not None:
             await callback.message.answer_document(document=doc, reply_markup=kb)

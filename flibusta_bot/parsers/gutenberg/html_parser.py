@@ -145,7 +145,7 @@ def parse_book_info(html: str) -> schemas.BookInfoData | None:
         format_title = title_elem[0].text_content().strip()
 
         # Skip "Read now!" format
-        if format_title == "Read now!":
+        if format_title == "Read now!" or "audio" in format_title.lower():
             continue
 
         # Get the download URL

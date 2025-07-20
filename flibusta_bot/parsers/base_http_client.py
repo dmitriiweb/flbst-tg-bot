@@ -1,3 +1,4 @@
+import io
 from typing import Any
 
 import httpx
@@ -53,3 +54,21 @@ class BaseHttpClient:
             headers=dict(response.headers),
             url=url,
         )
+
+    async def download_book_by_url(self, url: str) -> schemas.BinaryHttpResponse | None:
+        try:
+            response = await self.client.get(url, headers=self.default_headers)
+            if response.status_code != 200:
+                logger.error(
+                    f"Error while downloading book: {response.status_code} | {url=}"
+                )
+                return None
+            return schemas.BinaryHttpResponse(
+                status_code=response.status_code,
+                content=io.BytesIO(response.content),
+                headers=dict(response.headers),
+                url=url,
+            )
+        except Exception as e:
+            logger.error(f"Error while downloading book: {e} | {url=}")
+            return None

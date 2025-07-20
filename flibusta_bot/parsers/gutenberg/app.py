@@ -16,6 +16,9 @@ class App:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.http_client.__aexit__(exc_type, exc_val, exc_tb)
 
+    def get_download_url(self, book_id: str, download_format: str) -> str:
+        return f"{self.http_client.base_url}ebooks/{book_id}.{download_format}"
+
     async def search_books(
         self, query: str, start_index: str | None = None
     ) -> tuple[list[schemas.BookListingData], str | None, str | None]:
@@ -41,3 +44,12 @@ class App:
         if not response:
             return None
         return html_parser.parse_book_info(response.content)
+
+    async def download_book(
+        self, book_id: str, download_format: str
+    ) -> schemas.BinaryHttpResponse | None:
+        url = self.get_download_url(book_id, download_format)
+        response = await self.http_client.download_book_by_url(url)
+        if not response:
+            return None
+        return response.content
