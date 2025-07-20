@@ -37,3 +37,10 @@ class DownloadUrlData(Serializable):
         if raw_filename.endswith(".zip"):
             return "zip"
         return raw_filename.split(".")[-2]
+
+    @property
+    def download_file_format(self) -> str:
+        raw_filename = self.url.split("/")[-1]
+        if raw_filename.endswith(".zip"):
+            return "zip"
+        return ".".join(raw_filename.split(".")[1:-1])

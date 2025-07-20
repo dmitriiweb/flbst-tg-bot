@@ -15,3 +15,4 @@ class FlibustaSearchByAuthorStates(StatesGroup):
 
 class GutenbergStartStates(StatesGroup):
     search_query = State()
+    download_book = State()

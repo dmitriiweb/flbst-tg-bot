@@ -36,8 +36,8 @@ class App:
         prev_index = self.http_client.get_page_index(prev_page)
         return books, next_index, prev_index
 
-    async def get_book_info(self, url: str) -> schemas.BookInfoData | None:
-        response = await self.http_client.make_request(url)
+    async def get_book_info(self, book_id: str) -> schemas.BookInfoData | None:
+        response = await self.http_client.get_book_info(book_id)
         if not response:
             return None
         return html_parser.parse_book_info(response.content)

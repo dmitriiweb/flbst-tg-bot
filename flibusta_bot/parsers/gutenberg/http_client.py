@@ -27,3 +27,8 @@ class HttpClient(BaseHttpClient):
         url = f"{self.base_url}ebooks/search/"
         res = await self.make_request(url, params=params)
         return res
+
+    async def get_book_info(self, book_id: str) -> schemas.HttpResponse | None:
+        url = f"{self.base_url}ebooks/{book_id}"
+        response = await self.make_request(url)
+        return response

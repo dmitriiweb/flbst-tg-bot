@@ -60,3 +60,22 @@ async def listing_navigation(
     await callback.message.answer(
         i18n.gutenberg.listing.book.title(query=user_query), reply_markup=kb
     )
+
+
+@router.callback_query(
+    StateFilter(GutenbergStartStates.search_query), F.data.startswith("book")
+)
+async def book_info(
+    callback: CallbackQuery, state: FSMContext, i18n: TranslatorRunner, **data
+):
+    book_id = callback.data.split("|")[-1]
+    async with GutenbergParser() as parser:
+        book_info = await parser.get_book_info(book_id)
+    if book_info is None:
+        return
+    answer = f"{book_info.title}\n\n{book_info.author}\n\n{book_info.description}"[
+        :4096
+    ]
+    kb = kbs.download_formats_kb(book_info.download_urls)
+    await callback.message.answer(answer, reply_markup=kb)
+    await state.set_state(GutenbergStartStates.download_book)
