@@ -33,6 +33,6 @@ def book_listing_kb(
             ]
         )
     books_buttons.append(
-        [InlineKeyboardButton(text=i18n.cancel.button(), callback_data="cancel")]
+        [InlineKeyboardButton(text=i18n.cancel.button(), callback_data="back")]
     )
     return InlineKeyboardMarkup(inline_keyboard=books_buttons)
