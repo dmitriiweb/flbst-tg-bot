@@ -1,4 +1,7 @@
 start-greeting = Salut ! Je suis un bot pour rechercher des livres dans la bibliothèque. Choisissez une action
+start-choose-library = Choisissez une bibliothèque
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Projet Gutenberg
 start-error-generic = Désolé, une erreur est survenue. Veuillez réessayer plus tard.
 start-enter-title = Entrez le titre du livre
 start-enter-author = Entrez le nom de l'auteur
@@ -46,3 +49,7 @@ search-by-author-found-books =
        *[other] { $total_books } livres trouvés
     }
 search-by-author-error-generic = Désolé, une erreur est survenue. Veuillez réessayer plus tard.
+gutetenberg-call-to-action = Saisir la requête de recherche
+gutenberg-listing-previous = 👈 Précédent
+gutenberg-listing-next = 👉 Suivant
+gutenberg-listing-book-title = Résultats de recherche pour "{ $query }"

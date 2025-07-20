@@ -1,4 +1,7 @@
 start-greeting = Salom! Men kutubxonada kitob qidirish uchun botman. Harakatni tanlang
+start-choose-library = Kutubxonani tanlang
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg loyihasi
 start-error-generic = Kechirasiz, xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring.
 start-enter-title = Kitob nomini kiriting
 start-enter-author = Muallifning ismini kiriting
@@ -27,3 +30,7 @@ search-by-title-back = Orqaga
 search-by-title-cancel = Bekor qilish
 search-by-title-download-button-with_-format = { $format } yuklab olish
 search-by-title-download-button = Yuklab olish
+gutetenberg-call-to-action = Qidiruv so'rovini kiriting
+gutenberg-listing-previous = 👈 Oldingi
+gutenberg-listing-next = 👉 Keyingi
+gutenberg-listing-book-title = "{ $query }" uchun qidiruv natijalari

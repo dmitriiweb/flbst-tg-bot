@@ -1,4 +1,7 @@
 start-greeting = Hallo! Ik ben een bot voor het zoeken naar boeken in de bibliotheek. Kies een actie
+start-choose-library = Kies een bibliotheek
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Project Gutenberg
 start-error-generic = Sorry, er is een fout opgetreden. Probeer het later opnieuw.
 start-enter-title = Voer de boektitel in
 start-enter-author = Voer de naam van de auteur in
@@ -27,3 +30,7 @@ search-by-title-back = Terug
 search-by-title-cancel = Annuleren
 search-by-title-download-button-with_-format = { $format } downloaden
 search-by-title-download-button = Downloaden
+gutetenberg-call-to-action = Voer zoekopdracht in
+gutenberg-listing-previous = 👈 Vorige
+gutenberg-listing-next = 👉 Volgende
+gutenberg-listing-book-title = Zoekresultaten voor "{ $query }"

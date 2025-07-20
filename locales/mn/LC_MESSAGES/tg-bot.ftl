@@ -1,4 +1,7 @@
 start-greeting = Сайн уу! Би номын сангаас ном хайх бот байна. Үйлдэл сонгоно уу
+start-choose-library = Номын сан сонгоно уу
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Гутенберг төсөл
 start-error-generic = Уучлаарай, алдаа гарлаа. Дараа дахин оролдоно уу.
 start-enter-title = Номын нэрийг оруулна уу
 start-enter-author = Зохиогчийн нэрийг оруулна уу
@@ -27,3 +30,7 @@ search-by-title-back = Буцах
 search-by-title-cancel = Цуцлах
 search-by-title-download-button-with_-format = { $format } татах
 search-by-title-download-button = Татах
+gutetenberg-call-to-action = Хайлтын асуулга оруулна уу
+gutenberg-listing-previous = 👈 Өмнөх
+gutenberg-listing-next = 👉 Дараагийн
+gutenberg-listing-book-title = "{ $query }"-н хайлтын үр дүн

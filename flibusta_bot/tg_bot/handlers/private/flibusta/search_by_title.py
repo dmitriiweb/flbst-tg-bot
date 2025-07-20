@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 
@@ -12,17 +14,17 @@ from aiogram.types import (
     Message,
     URLInputFile,
 )
-from fluentogram import TranslatorRunner
+from fluentogram import TranslatorRunner  # type: ignore
 from loguru import logger
 
 from flibusta_bot import config
-from flibusta_bot.flibusta_parser import App as FlibustaParser
-from flibusta_bot.flibusta_parser import schemas
+from flibusta_bot.parsers.flibusta import schemas
+from flibusta_bot.parsers.flibusta.app import App as FlibustaParser
 from flibusta_bot.tg_bot import states as bot_states
-from flibusta_bot.tg_bot.keyboards import (
+from flibusta_bot.tg_bot.keyboards.flibusta import (
     choose_download_format_keyboard,
-    get_start_keyboard,
     item_listing_kb,
+    one_column_listing,
 )
 from flibusta_bot.tg_bot.middlewares.i118n import TranslatorRunnerMiddleware
 
@@ -42,7 +44,9 @@ class FileUrl:
     callback_data: str
 
 
-@router.message(StateFilter(bot_states.SearchByTitleStates.search_by_title), F.text)
+@router.message(
+    StateFilter(bot_states.FlibustaSearchByTitleStates.search_by_title), F.text
+)
 async def search_books(
     message: Message, state: FSMContext, i18n: TranslatorRunner, **data
 ):
@@ -68,7 +72,7 @@ async def search_books(
             i18n.search.by.title.found.books(total_books=total_books),
             reply_markup=kb,
         )
-        await state.set_state(bot_states.SearchByTitleStates.book_selected)
+        await state.set_state(bot_states.FlibustaSearchByTitleStates.book_selected)
     except Exception as e:
         logger.error(f"search_books error: {e}")
         try:
@@ -78,7 +82,7 @@ async def search_books(
 
 
 @router.callback_query(
-    StateFilter(bot_states.SearchByTitleStates.book_selected),
+    StateFilter(bot_states.FlibustaSearchByTitleStates.book_selected),
     F.data.startswith("book|"),
 )
 async def get_book_info_handler(callback: CallbackQuery, state: FSMContext, **data):
@@ -104,13 +108,18 @@ async def get_book_info_handler(callback: CallbackQuery, state: FSMContext, **da
             f"{book_info.id=} {book_info.title=} {book_info.author=} {book_info.book_url=}"
         )
         download_urls = [i.url for i in book_info.download_urls]
-        reply_markup = choose_download_format_keyboard(download_urls=download_urls, download_button_text=i18n.search.by.title.download.button())
+        reply_markup = choose_download_format_keyboard(
+            download_urls=download_urls,
+            download_button_text=i18n.search.by.title.download.button(),
+        )
         await callback_message.answer(
             book_info.to_telegram_message(),
             parse_mode=ParseMode.HTML,
             reply_markup=reply_markup,
         )
-        await state.set_state(bot_states.SearchByTitleStates.choose_download_format)
+        await state.set_state(
+            bot_states.FlibustaSearchByTitleStates.choose_download_format
+        )
     except Exception as e:
         logger.error(f"book_info error: {e}")
         message = callback.message
@@ -123,7 +132,7 @@ async def get_book_info_handler(callback: CallbackQuery, state: FSMContext, **da
 
 
 @router.callback_query(
-    StateFilter(bot_states.SearchByTitleStates.choose_download_format),
+    StateFilter(bot_states.FlibustaSearchByTitleStates.choose_download_format),
     F.data.startswith("downloadurl|"),
     F.data.endswith("download"),
 )
@@ -170,7 +179,7 @@ async def download_book_format(
 
 
 @router.callback_query(
-    StateFilter(bot_states.SearchByTitleStates.choose_download_format),
+    StateFilter(bot_states.FlibustaSearchByTitleStates.choose_download_format),
     F.data.startswith("downloadurl|"),
 )
 async def download_book(
@@ -197,9 +206,9 @@ async def download_book(
         logger.info(f"{file_url.filename=} {file_url.download_url=}")
         await callback.answer(i18n.search.by.title.download.started())
         doc = URLInputFile(url=file_url.download_url, filename=file_url.filename)
-        kb = get_start_keyboard(
-            i18n.start.search.by.title.button(),
-            i18n.start.search.by.author.button(),
+        kb = one_column_listing(
+            i18n.start.choose.library.flibusta(),
+            i18n.start.choose.library.gutenberg(),
         )
         if callback.message is not None:
             await callback.message.answer_document(document=doc, reply_markup=kb)

@@ -1,4 +1,7 @@
 start-greeting = שלום! אני בוט לחיפוש ספרים בספרייה. בחר פעולה
+start-choose-library = בחר ספרייה
+start-choose-library-flibusta = פליבוסטה
+start-choose-library-gutenberg = פרויקט גוטנברג
 start-error-generic = מצטערים, אירעה שגיאה. אנא נסה שוב מאוחר יותר.
 start-enter-title = הזן את שם הספר
 start-enter-author = הזן את שם הסופר
@@ -46,3 +49,7 @@ search-by-author-found-books =
        *[other] נמצאו { $total_books } ספרים
     }
 search-by-author-error-generic = מצטערים, אירעה שגיאה. אנא נסה שוב מאוחר יותר.
+gutetenberg-call-to-action = הזן שאילתת חיפוש
+gutenberg-listing-previous = 👉 הקודם
+gutenberg-listing-next = 👈 הבא
+gutenberg-listing-book-title = תוצאות חיפוש עבור "{ $query }"

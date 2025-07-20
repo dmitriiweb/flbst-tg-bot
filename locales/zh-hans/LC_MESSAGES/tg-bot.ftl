@@ -1,4 +1,7 @@
 start-greeting = 你好！我是一个在图书馆里搜索书籍的机器人。请选择一个操作
+start-choose-library = 选择一个图书馆
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = 古腾堡计划
 start-error-generic = 抱歉，发生了错误。请稍后再试。
 start-enter-title = 输入书名
 start-enter-author = 输入作者姓名
@@ -27,3 +30,7 @@ search-by-title-back = 返回
 search-by-title-cancel = 取消
 search-by-title-download-button-with_-format = 下载 { $format }
 search-by-title-download-button = 下载
+gutetenberg-call-to-action = 输入搜索查询
+gutenberg-listing-previous = 👈 上一页
+gutenberg-listing-next = 👉 下一页
+gutenberg-listing-book-title = “{ $query }”的搜索结果

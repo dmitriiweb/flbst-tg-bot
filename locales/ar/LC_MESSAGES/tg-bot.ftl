@@ -1,4 +1,7 @@
 start-greeting = مرحبًا! أنا روبوت للبحث عن الكتب في المكتبة. اختر إجراءً
+start-choose-library = اختر مكتبة
+start-choose-library-flibusta = فليبوستا
+start-choose-library-gutenberg = مشروع غوتنبرغ
 start-error-generic = عذرًا، حدث خطأ. يرجى المحاولة لاحقًا.
 start-enter-title = أدخل عنوان الكتاب
 start-enter-author = أدخل اسم المؤلف
@@ -8,7 +11,9 @@ start-search-by-author-button = 👤 البحث حسب المؤلف
 cancel-button = ❌ إلغاء
 
 search-by-title-empty-query = الاستعلام فارغ.
-search-by-title-not_-found-title = للأسف، لم يتم العثور على أي كتاب.\n\nحاول البحث باستعلام مختلف أو اضغط على زر الإلغاء
+search-by-title-not_-found-title = للأسف، لم يتم العثور على أي كتاب.
+
+حاول البحث باستعلام مختلف أو اضغط على زر الإلغاء
 search-by-title-found-books =
     { $total_books ->
         [one] تم العثور على كتاب واحد
@@ -25,7 +30,9 @@ search-by-title-download-button-with_-format = تحميل { $format }
 search-by-title-download-button = تحميل
 
 search-by-author-empty-query = الاستعلام فارغ.
-search-by-author-not_-found-author = للأسف، لم يتم العثور على أي مؤلف.\n\nحاول البحث باستعلام مختلف أو اضغط على زر الإلغاء
+search-by-author-not_-found-author = للأسف، لم يتم العثور على أي مؤلف.
+
+حاول البحث باستعلام مختلف أو اضغط على زر الإلغاء
 search-by-author-found-authors =
     { $total_authors ->
         [one] تم العثور على مؤلف واحد
@@ -41,4 +48,9 @@ search-by-author-found-books =
         [many] تم العثور على { $total_books } كتابًا
        *[other] تم العثور على { $total_books } كتاب
     }
-search-by-author-error-generic = عذرًا، حدث خطأ. يرجى المحاولة لاحقًا. 
+search-by-author-error-generic = عذرًا، حدث خطأ. يرجى المحاولة لاحقًا.
+gutetenberg-call-to-action = أدخل استعلام البحث
+gutenberg-listing-previous = 👈 السابق
+gutenberg-listing-next = 👉 التالي
+gutenberg-listing-book-title = نتائج البحث عن "{ $query }"
+ 

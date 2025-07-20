@@ -1,4 +1,7 @@
 start-greeting = Привет! Я бот для поиска книг в библиотеке. Выберите действие
+start-choose-library = Выберите библиотеку
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Проект Гутенберг
 start-error-generic = Извините, произошла ошибка. Попробуйте позже.
 start-enter-title = Введите название книги
 start-enter-author = Введите автора книги
@@ -42,3 +45,8 @@ search-by-author-found-books =
        *[other] Найдено { $total_books } книг
     }
 search-by-author-error-generic = Извините, произошла ошибка. Попробуйте позже.
+gutetenberg-call-to-action = Введите поисковый запрос
+gutenberg-listing-previous = 👈 Предыдущая
+gutenberg-listing-next = 👉 Следующая
+gutenberg-listing-book-title = Результаты поиска по запросу "{ $query }"
+

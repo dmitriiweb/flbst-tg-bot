@@ -1,4 +1,7 @@
 start-greeting = こんにちは！図書館で本を検索するためのボットです。アクションを選択してください
+start-choose-library = 図書館を選択してください
+start-choose-library-flibusta = フリブスタ
+start-choose-library-gutenberg = プロジェクト・グーテンベルク
 start-error-generic = 申し訳ありませんが、エラーが発生しました。後でもう一度お試しください。
 start-enter-title = 書名を入力してください
 start-enter-author = 著者名を入力してください
@@ -46,3 +49,7 @@ search-by-author-found-books =
        *[other] { $total_books } 冊の本が見つかりました
     }
 search-by-author-error-generic = 申し訳ありませんが、エラーが発生しました。後でもう一度お試しください。
+gutetenberg-call-to-action = 検索クエリを入力してください
+gutenberg-listing-previous = 👈 前へ
+gutenberg-listing-next = 👉 次へ
+gutenberg-listing-book-title = 「{ $query }」の検索結果

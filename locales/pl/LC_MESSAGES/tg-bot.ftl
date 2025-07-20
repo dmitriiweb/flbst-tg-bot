@@ -1,4 +1,7 @@
 start-greeting = Cześć! Jestem botem do wyszukiwania książek w bibliotece. Wybierz akcję
+start-choose-library = Wybierz bibliotekę
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Projekt Gutenberg
 start-error-generic = Przepraszamy, wystąpił błąd. Spróbuj ponownie później.
 start-enter-title = Wprowadź tytuł książki
 start-enter-author = Wprowadź nazwisko autora
@@ -27,3 +30,7 @@ search-by-title-back = Wstecz
 search-by-title-cancel = Anuluj
 search-by-title-download-button-with_-format = Pobierz { $format }
 search-by-title-download-button = Pobierz
+gutetenberg-call-to-action = Wprowadź zapytanie
+gutenberg-listing-previous = 👈 Poprzednia
+gutenberg-listing-next = 👉 Następna
+gutenberg-listing-book-title = Wyniki wyszukiwania dla "{ $query }"

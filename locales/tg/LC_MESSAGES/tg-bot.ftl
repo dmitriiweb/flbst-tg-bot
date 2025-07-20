@@ -1,4 +1,7 @@
 start-greeting = Салом! Ман бот барои ҷустуҷӯи китобҳо дар китобхона ҳастам. Амалро интихоб кунед
+start-choose-library = Китобхонаро интихоб кунед
+start-choose-library-flibusta = Флибуста
+start-choose-library-gutenberg = Лоиҳаи Гутенберг
 start-error-generic = Бубахшед, хатогӣ рух дод. Лутфан, баъдтар бори дигар кӯшиш кунед.
 start-enter-title = Номи китобро ворид кунед
 start-enter-author = Номи муаллифро ворид кунед
@@ -27,3 +30,7 @@ search-by-title-back = Бозгашт
 search-by-title-cancel = Бекор кардан
 search-by-title-download-button-with_-format = Боргирӣ { $format }
 search-by-title-download-button = Боргирӣ
+gutetenberg-call-to-action = Дархости ҷустуҷӯро ворид кунед
+gutenberg-listing-previous = 👈 Пешина
+gutenberg-listing-next = 👉 Оянда
+gutenberg-listing-book-title = Натиҷаҳои ҷустуҷӯ барои "{ $query }"

@@ -1,4 +1,7 @@
 start-greeting = Merhaba! Kütüphanede kitap aramak için bir botum. Bir eylem seçin
+start-choose-library = Bir kütüphane seçin
+start-choose-library-flibusta = Flibusta
+start-choose-library-gutenberg = Gutenberg Projesi
 start-error-generic = Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.
 start-enter-title = Kitap başlığını girin
 start-enter-author = Yazarın adını girin
@@ -27,3 +30,7 @@ search-by-title-back = Geri
 search-by-title-cancel = İptal
 search-by-title-download-button-with_-format = { $format } indir
 search-by-title-download-button = İndir
+gutetenberg-call-to-action = Arama sorgusunu girin
+gutenberg-listing-previous = 👈 Önceki
+gutenberg-listing-next = 👉 Sonraki
+gutenberg-listing-book-title = "{ $query }" için arama sonuçları
