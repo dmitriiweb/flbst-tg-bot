@@ -9,7 +9,8 @@ class I18nFilter(Filter):
 
     async def __call__(self, message: Message, event_from_user: User, **data) -> bool:
         hub: TranslatorHub = data.get("translator_hub")  # type: ignore
-        translator = hub.get_translator_by_locale("en")  # type: ignore
+        user_locale = event_from_user.language_code
+        translator = hub.get_translator_by_locale(user_locale)
         tr_text = translator.get(self.expected_text)
         message_text = message.text
         result = tr_text == message_text
